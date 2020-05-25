@@ -4,6 +4,7 @@ using UnityEngine;
 using PineBT;
 using PineBT.Composites;
 using PineBT.Tasks;
+using PineBT.Decorators;
 
 public class Player : MonoBehaviour
 {
@@ -30,19 +31,21 @@ public class Player : MonoBehaviour
     void CreateBehaviourTree()
     {
         tree = new BehaviourTree("ExampleTree");
-        RandomSelector root = new RandomSelector("Root");
+        Service service = new Service("Example", .5f, ExampleService, false, true);
+        RandomSelector moveSelector = new RandomSelector("MoveSelector");
         Action move1 = new Action("Move1", () => Move(point1.position));
         Action move2 = new Action("Move2", () => Move(point2.position));
         Action move3 = new Action("Move3", () => Move(point3.position));
         Action move4 = new Action("Move4", () => Move(point4.position));
 
-        tree.SetRoot(root);
-        root.AddChild(move1);
-        root.AddChild(move2);
-        root.AddChild(move3);
-        root.AddChild(move4);
+        tree.SetRoot(service);
+            service.AddChild(moveSelector);
+                moveSelector.AddChild(move1);
+                moveSelector.AddChild(move2);
+                moveSelector.AddChild(move3);
+                moveSelector.AddChild(move4);
 
-        PineTreeUnityContext.GetInstance().TreeManager.RegisterTree(tree);
+        tree.Enable();
     }
 
     State Move(Vector3 point)
@@ -56,5 +59,15 @@ public class Player : MonoBehaviour
             return State.RUNNING;
         }
         return State.SUCCESS;
+    }
+
+    void ExampleService()
+    {
+        Debug.Log($"Count {tree.TreeManager.TotalTimerCount()} : {Time.time}");
+    }
+
+    void OnDisable()
+    {
+        tree.Disable();
     }
 }
