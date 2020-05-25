@@ -20,6 +20,7 @@ namespace PineBT.Decorators
         public Decorator(string name, Node child) : base(name)
         {
             this.child = child;
+            child.SetParent(this);
         }
 
         /// <summary>
@@ -27,8 +28,11 @@ namespace PineBT.Decorators
         /// </summary>
         public void AddChild(Node child)
         {
-            if (child == null)
+            if (this.child == null)
+            {
                 this.child = child;
+                this.child.SetParent(this);
+            }
             else
             {
                 #if UNITY_EDITOR
