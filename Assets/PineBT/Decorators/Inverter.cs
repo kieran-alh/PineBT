@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PineBT.Decorators
+namespace PineBT
 {
     /// <summary>
     /// A Decorator node that inverts the result of its child.

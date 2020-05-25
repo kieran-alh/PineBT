@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PineBT.Tasks
+namespace PineBT
 {
     /// <summary> 
     /// The abstract base class for leaf tasks.

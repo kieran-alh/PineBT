@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PineBT.Tasks
+namespace PineBT
 {
     /// <summary> 
     /// A basic task that can be passed functions to be executed.

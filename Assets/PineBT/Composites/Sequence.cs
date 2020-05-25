@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PineBT.Composites
+namespace PineBT
 {
     /// <summary> 
     /// The Sequence runs its children until a child returns failure, 

@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PineBT.Decorators
+namespace PineBT
 {
     /// <summary>
     /// <para>A Service (Decorator) runs a function continuously at a set time interval.

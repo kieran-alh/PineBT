@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PineBT.Decorators
+namespace PineBT
 {
     /// <summary>
     /// The abstract base class of all nodes that have 1 child.

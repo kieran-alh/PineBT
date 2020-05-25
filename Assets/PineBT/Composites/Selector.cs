@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PineBT.Composites
+namespace PineBT
 {
     /// <summary> 
     /// The Selector runs its children until a child returns success, 
