@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using UnityEngine;
 
-namespace PineBT.Composites
+namespace PineBT
 {
     /// <summary> 
     /// The RandomSequence runs its children in a random order 
