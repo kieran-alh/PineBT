@@ -57,9 +57,9 @@ namespace PineBT
                     action.Invoke();
                     timer.Schedule(updateElapsedTime);
 
-                    timer.repeatCount--;
+                    timer.executions--;
 
-                    if (timer.repeatCount == 0)
+                    if (timer.executions == 0)
                         UnregisterTimer(action);
                 }
             }
@@ -158,13 +158,14 @@ namespace PineBT
         /// Registers an action to run on a timer at the specified interval.
         /// </summary>
         /// <param name="interval">The time interval for the timer to run at.</param>
-        /// <param name="repeat">How many times the timer should repeat its execution. -1 = Infinite.</param>
+        /// <param name="executions">How many times the timer should execute. -1 = Infinite.</param>
         /// <param name="action">The action to execute on the timer's interval.</param>
-        public void RegisterTimer(float interval, int repeat, System.Action action)
+        public void RegisterTimer(float interval, int executions, System.Action action)
         {
             Timer timer = null;
             if (!isUpdating && !isFixedUpdating)
             {
+                Debug.Log($"RegisterTimer->timers {action.Method.ToString()}");
                 // If the action doesn't have a timer, get a timer.
                 if (!timers.ContainsKey(action))
                     timers[action] = GetTimer();
@@ -173,16 +174,20 @@ namespace PineBT
             }
             else
             {
+                if (timersToRemove.Contains(action))
+                    timersToRemove.Remove(action);
+
+                if (timers.ContainsKey(action))
+                    return;
+
+                Debug.Log($"RegisterTimer->timersToAdd {action.Method.ToString()}");
                 if (!timersToAdd.ContainsKey(action))
                     timersToAdd[action] = GetTimer();
                 
                 timer = timersToAdd[action];
-
-                if (timersToRemove.Contains(action))
-                    timersToRemove.Remove(action);
             }
             
-            timer.repeatCount = repeat;
+            timer.executions = executions;
             timer.interval = interval;
             // TODO: Only schedules timer for Update, add FixedUpdate
             timer.Schedule(updateElapsedTime);
@@ -209,6 +214,7 @@ namespace PineBT
         /// <param name="action">The action to be unregistered.</param>
         public void UnregisterTimer(System.Action action)
         {
+            Debug.Log($"UnregisterTimer {action.Method.ToString()}");
             Timer timer = null;
             if (!isUpdating && !isFixedUpdating)
             {
@@ -265,7 +271,7 @@ namespace PineBT
             {
                 timer.inUse = false;
                 timer.timeThreshold = 0;
-                timer.repeatCount = 0;
+                timer.executions = 0;
                 timer.interval = 0;
                 timerPool.Enqueue(timer);
             }
@@ -298,6 +304,19 @@ namespace PineBT
             return RunningTimerCount() + timerPool.Count;
         }
 
+        public void DebugTimers()
+        {
+            Debug.Log("TIMERS");
+            foreach(KeyValuePair<System.Action, Timer> pair in timers)
+            {
+                Debug.Log($"{pair.Key.Method.ToString()} : {pair.Value.ToString()}");
+            }
+            foreach(Timer timer in timerPool)
+            {
+                Debug.Log(timer.ToString());
+            }
+        }
+
         private class Timer
         {
             // Is the timer currently being used
@@ -306,8 +325,8 @@ namespace PineBT
             public double interval = 0f;
             // The next time the timer should at
             public double timeThreshold = 0f;
-            // The amount of times the timer should repeat
-            public int repeatCount = 0;
+            // The amount of times the timer should execute
+            public int executions = 0;
 
             public void Schedule(double elapsedTime)
             {
@@ -317,6 +336,11 @@ namespace PineBT
             public bool IsThresholdMet(double elapsedTime)
             {
                 return timeThreshold <= elapsedTime;
+            }
+
+            public override string ToString()
+            {
+                return $"Timer U:{inUse.ToString()} I:{interval} E:{executions}";
             }
         }
     }

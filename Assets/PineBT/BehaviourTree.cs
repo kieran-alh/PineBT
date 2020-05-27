@@ -70,6 +70,7 @@ namespace PineBT
         /// </summary>
         public void Disable()
         {
+            //TODO: Is clean necessary?
             PineTreeUnityContext.GetInstance().TreeManager.UnregisterTree(this);
         }
         
