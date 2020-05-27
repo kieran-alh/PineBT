@@ -15,7 +15,8 @@ namespace PineBT
         private HashSet<System.Action> timersToRemove = new HashSet<System.Action>();
 
         // Stores timers that are not in use
-        private Queue<Timer> timerPool = new Queue<Timer>();
+        private List<Timer> timerPool = new List<Timer>();
+        private int runningTimers = 0;
 
         private bool isUpdating;
         private bool isFixedUpdating;
@@ -77,7 +78,11 @@ namespace PineBT
 
             foreach(System.Action action in timersToAdd.Keys)
             {
-                timers.Add(action, timersToAdd[action]);
+                if (timers.ContainsKey(action))
+                {
+                    timers[action].inUse = false;
+                }
+                timers[action] = timersToAdd[action];
             }
 
             foreach(System.Action action in timersToRemove)
@@ -86,12 +91,13 @@ namespace PineBT
                 timers.Remove(action);
             }
 
+            // Updating the trees and timers is complete
+            isUpdating = false;
+
             treesToAdd.Clear();
             treesToRemove.Clear();
             timersToAdd.Clear();
             timersToRemove.Clear();
-
-            isUpdating = false;
         }
 
         /// <summary>Called by Unity's FixedUpdate function.</summary>
@@ -156,6 +162,8 @@ namespace PineBT
 
         /// <summary>
         /// Registers an action to run on a timer at the specified interval.
+        /// If the action is already registered then its timer will be updated with the 
+        /// new values passed in.
         /// </summary>
         /// <param name="interval">The time interval for the timer to run at.</param>
         /// <param name="executions">How many times the timer should execute. -1 = Infinite.</param>
@@ -165,7 +173,6 @@ namespace PineBT
             Timer timer = null;
             if (!isUpdating && !isFixedUpdating)
             {
-                Debug.Log($"RegisterTimer->timers {action.Method.ToString()}");
                 // If the action doesn't have a timer, get a timer.
                 if (!timers.ContainsKey(action))
                     timers[action] = GetTimer();
@@ -177,10 +184,6 @@ namespace PineBT
                 if (timersToRemove.Contains(action))
                     timersToRemove.Remove(action);
 
-                if (timers.ContainsKey(action))
-                    return;
-
-                Debug.Log($"RegisterTimer->timersToAdd {action.Method.ToString()}");
                 if (!timersToAdd.ContainsKey(action))
                     timersToAdd[action] = GetTimer();
                 
@@ -249,15 +252,23 @@ namespace PineBT
         private Timer GetTimer()
         {
             Timer timer = null;
-            if (timerPool.Count == 0)
+            int index = 0;
+            while (index < timerPool.Count)
+            {
+                if (!timerPool[index].inUse)
+                {
+                    timer = timerPool[index];
+                    break;
+                }
+                index++;
+            }
+            if (timer == null)
             {
                 timer = new Timer();
                 timer.inUse = true;
+                timerPool.Add(timer);
             }
-            else
-            {
-                timer = timerPool.Dequeue();
-            }
+            runningTimers++;
             return timer;
         }
 
@@ -267,14 +278,11 @@ namespace PineBT
         /// <param name="timer">The unused timer.</param>
         private void ReturnTimer(Timer timer)
         {
-            if (!timerPool.Contains(timer))
-            {
-                timer.inUse = false;
-                timer.timeThreshold = 0;
-                timer.executions = 0;
-                timer.interval = 0;
-                timerPool.Enqueue(timer);
-            }
+            timer.inUse = false;
+            timer.timeThreshold = 0;
+            timer.executions = 0;
+            timer.interval = 0;
+            runningTimers--;
         }
 
         /// <summary>
@@ -292,7 +300,7 @@ namespace PineBT
         /// <returns>The total number of running timers.</returns>
         public int RunningTimerCount()
         {
-            return timers.Values.Count + timersToAdd.Count - timersToRemove.Count;
+            return runningTimers;
         }
 
         /// <summary>
@@ -301,9 +309,12 @@ namespace PineBT
         /// <returns>The total number of timers.</returns>
         public int TotalTimerCount()
         {
-            return RunningTimerCount() + timerPool.Count;
+            return timerPool.Count;
         }
 
+        /// <summary>
+        /// Debug.Logs all timers.
+        /// </summary>
         public void DebugTimers()
         {
             Debug.Log("TIMERS");

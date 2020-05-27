@@ -160,10 +160,12 @@ namespace PineBT
                 } 
             }
 
+            // Triggering the listeners is complete
+            isUpdating = false;
+
             listenersToAdd.Clear();
             listenersToRemove.Clear();
             notifications.Clear();
-            isUpdating = false;
         }
 
         public void RegisterListener(string key, System.Action<Type, object> action)

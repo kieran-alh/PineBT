@@ -78,7 +78,7 @@ public class Player : MonoBehaviour
     void BlackboardListener(Blackboard.Type type, object value)
     {
         Vector3 val = (Vector3)value;
-        // Debug.Log($"TYPE: {type} : {value.ToString()}");
+        Debug.Log($"TYPE: {type} : {value.ToString()}");
     }
 
     void DebuggerService()
