@@ -22,7 +22,7 @@ namespace PineBT
         /// Returns the instance of PineTreeUnityContext. If the instance is null, and new GameObject
         /// is created with PineTreeUnityContext added as a component. 
         /// </summary>
-        public static PineTreeUnityContext GetInstance()
+        public static PineTreeUnityContext Instance()
         {
             if (instance == null)
             {

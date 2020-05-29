@@ -217,7 +217,6 @@ namespace PineBT
         /// <param name="action">The action to be unregistered.</param>
         public void UnregisterTimer(System.Action action)
         {
-            Debug.Log($"UnregisterTimer {action.Method.ToString()}");
             Timer timer = null;
             if (!isUpdating && !isFixedUpdating)
             {

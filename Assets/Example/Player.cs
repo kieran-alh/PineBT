@@ -20,12 +20,6 @@ public class Player : MonoBehaviour
         CreateBehaviourTree();
     }
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-
     void CreateBehaviourTree()
     {
         // Create tree
@@ -88,8 +82,7 @@ public class Player : MonoBehaviour
 
     void OnDisable()
     {
-        // TODO: Does there need to be clean up?
-        // tree.Disable();
-        // blackboard.Disable();
+        tree.Disable();
+        blackboard.Disable();
     }
 }

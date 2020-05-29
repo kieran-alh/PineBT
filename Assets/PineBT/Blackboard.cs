@@ -4,39 +4,88 @@ using UnityEngine;
 
 namespace PineBT
 {
+    /// <summary>
+    /// <para>Blackboard is a data store that can be used by a <see cref="BehaviourTree"/> 
+    /// or any entity to hold data for decision making or general storage.</para>
+    /// <para>A Blackboard can be used by one or more <see cref="BehaviourTree"/> 
+    /// and can act as a centeralized data store between all the trees.</para>
+    /// <para>Event listeners can be added and will receive a callback when the data is 
+    /// first added, updated, or removed from the Blackboard.</para>
+    /// </summary>
     public class Blackboard
-    {        
+    {
+        // The Blackboard's name
+        private string name;
+        // The Blackboard's parent
         private Blackboard parent;
+        // The primary data store for the Blackboard
         private Dictionary<string, object> data = new Dictionary<string, object>();
-        private Dictionary<string, List<System.Action<Type, object>>> listeners = new Dictionary<string, List<System.Action<Type, object>>>();
+        // The primary set of event listeners for the Blackboard data
+        private Dictionary<string, HashSet<System.Action<Type, object>>> listeners = new Dictionary<string, HashSet<System.Action<Type, object>>>();
 
+        // Listeners to be added in the TriggerListeners cycle
         private Dictionary<string, HashSet<System.Action<Type, object>>> listenersToAdd = new Dictionary<string, HashSet<System.Action<Type, object>>>();
+        // Listeners to be removed in the TriggerListeners cycle
         private Dictionary<string, HashSet<System.Action<Type, object>>> listenersToRemove = new Dictionary<string, HashSet<System.Action<Type, object>>>();
+        // Is the Blackboard currenttly triggering its event listeners
         private bool isUpdating = false;
 
+        // List of data change notifications
         private List<Notification> notifications = new List<Notification>();
 
         private PineTreeManager treeManager;
 
-        public Blackboard()
+        /// <summary>
+        /// Constructs a Blackboard with a default name.
+        /// </summary>
+        public Blackboard() : this("Blackboard")
         {}
 
-        public Blackboard(Blackboard parent)
+        /// <summary>
+        /// Constructs a Blackboard with a custom name.
+        /// </summary>
+        public Blackboard(string name)
         {
+            this.name = name;
+        }
+
+        /// <summary>
+        /// Constructs a Blackboard with a parent.
+        /// </summary>
+        public Blackboard(Blackboard parent) : this("Blackboard", parent)
+        {}
+
+        /// <summary>
+        /// Constructs a Blackboard with a custom name and parent.
+        /// </summary>
+        public Blackboard(string name, Blackboard parent)
+        {
+            this.name = name;
             this.parent = parent;
         }
 
+        /// <summary>
+        /// Enables the Blackboard for listeners.
+        /// </summary>
         public void Enable()
         {
-            treeManager = PineTreeUnityContext.GetInstance().TreeManager;
+            treeManager = PineTreeUnityContext.Instance().TreeManager;
         }
 
+        /// <summary>
+        /// Disables the Blackboard and Unregisters any listeners.
+        /// </summary>
         public void Disable()
         {
-            // TODO: Is clean necessary?
             // Remove all listeners
-            // if (treeManager != null)
-            //     treeManager.UnregisterTimer(TriggerListeners);
+            if (treeManager != null)
+                treeManager.UnregisterTimer(TriggerListeners);
+        }
+
+        public Blackboard Parent
+        {
+            get {return parent;}
+            set {parent = value;}
         }
 
         public object this[string key]
@@ -45,6 +94,12 @@ namespace PineBT
             set {Add(key, value);}
         }
 
+        /// <summary>
+        /// Gets the value for the specified key. If the key does not exist, null is returned.
+        /// </summary>
+        /// <typeparam name="T"></typeparam>
+        /// <param name="key">The value's key.</param>
+        /// <returns>Typed value or null.</returns>
         public T Get<T>(string key)
         {
             object value = Get(key);
@@ -53,6 +108,11 @@ namespace PineBT
             return (T)value;
         }
 
+        /// <summary>
+        /// Gets the object value for the specified key. If the key does not exist, null is returned.
+        /// </summary>
+        /// <param name="key">The value's key.</param>
+        /// <returns>Object value or null.</returns>
         public object Get(string key)
         {
             if (data.ContainsKey(key))
@@ -62,16 +122,39 @@ namespace PineBT
             else
                 return null;
         }
-
-        public bool Has(string key)
+        
+        /// <summary>
+        /// Whether the Blackboard contains the specified key.
+        /// If the Blackboard does not have the key and has a parent, the parent will be checked.
+        /// </summary>
+        /// <param name="key">The key to be checked.</param>
+        /// <returns>Whether the Blackboard contains the key.</returns>
+        public bool HasKey(string key)
         {
-            return data.ContainsKey(key) || (parent != null && parent.Has(key));
+            return data.ContainsKey(key) || (parent != null && parent.HasKey(key));
         }
 
+        /// <summary>
+        /// Whether the Blackboard has a non null value for the specified key.
+        /// If the Blackboard does not have a non null value and has a parent, the parent will be checked.
+        /// </summary>
+        /// <param name="key">The value's key.</param>
+        /// <returns>Whether a non null value is contained in the Blackboard.</returns>
+        public bool HasValue(string key)
+        {
+            return (data.ContainsKey(key) && data[key] != null) || (parent != null && parent.HasValue(key));
+        }
+
+        /// <summary>
+        /// Adds a key value pair to the Blackboard.
+        /// If the Blackboard has a parent and the parent contains the key, the value will be added or updated in the parent.
+        /// </summary>
+        /// <param name="key">The value's key.</param>
+        /// <param name="value">The value itself.</param>
         public void Add(string key, object value)
         {
             // If the parent has the key, set its value
-            if (parent != null && parent.Has(key))
+            if (parent != null && parent.HasKey(key))
             {
                 parent.Add(key, value);
             }
@@ -93,6 +176,10 @@ namespace PineBT
             }
         }
 
+        /// <summary>
+        /// Removes the key and value from the Blackboard.
+        /// </summary>
+        /// <param name="key">The key to be removed.</param>
         public void Remove(string key)
         {
             if (data.ContainsKey(key))
@@ -103,6 +190,10 @@ namespace PineBT
             }
         }
 
+        /// <summary>
+        /// Registers the <see cref="TriggerListeners"/> function with the <see cref="PineTreeManager"/>
+        /// as a timer to be Invoked on the next update cycle.
+        /// </summary>
         private void RegisterNotifications()
         {
             if (notifications.Count == 0)
@@ -111,7 +202,11 @@ namespace PineBT
             treeManager.RegisterTimer(0, 1, TriggerListeners);
         }
 
-        public void TriggerListeners()
+        /// <summary>
+        /// Iterates through the pending Notifications and Invokes their corresponding Listener with the <see cref="Type"/> and value.
+        /// Adds and removes listeners from the primary listener dictionary.
+        /// </summary>
+        private void TriggerListeners()
         {
             isUpdating = true;
             if (notifications.Count == 0)
@@ -125,7 +220,7 @@ namespace PineBT
                     continue;
 
                 // Get all the listener actions for the current notification key
-                List<System.Action<Type, object>> currentListeners = listeners[notification.key];
+                HashSet<System.Action<Type, object>> currentListeners = listeners[notification.key];
 
                 // Invoke all the listener actions
                 foreach(System.Action<Type, object> listener in currentListeners)
@@ -140,17 +235,18 @@ namespace PineBT
             // Add new listeners
             foreach(string key in listenersToAdd.Keys)
             {
-                Debug.Log($"Adding Listener {key}");
                 if (!listeners.ContainsKey(key))
-                    listeners.Add(key, new List<System.Action<Type, object>>());
+                    listeners.Add(key, new HashSet<System.Action<Type, object>>());
                 
-                listeners[key].AddRange(listenersToAdd[key]);
+                foreach(System.Action<Type, object> listener in listenersToAdd[key])
+                {
+                    listeners[key].Add(listener);
+                }
             }
 
             // Remove listeners
             foreach(string key in listenersToRemove.Keys)
             {
-                Debug.Log($"Removing Listener {key}");
                 if (!listeners.ContainsKey(key))
                     continue;
 
@@ -168,6 +264,12 @@ namespace PineBT
             notifications.Clear();
         }
 
+        /// <summary>
+        /// Register's a <see cref="System.Action"/> to listen and respond when there is a change to the key's value.
+        /// If the listener is already registered for the specified key, it will NOT be registered again.
+        /// </summary>
+        /// <param name="key">The key to listen on.</param>
+        /// <param name="action">The action to Invoke on value change.</param>
         public void RegisterListener(string key, System.Action<Type, object> action)
         {
             if (!isUpdating)
@@ -175,35 +277,70 @@ namespace PineBT
                 // If the listeners dict doesn't have the key
                 // Add the key to the listeners and create the listeners function list
                 if (!listeners.ContainsKey(key))
-                    listeners.Add(key, new List<System.Action<Type, object>>());
+                    listeners.Add(key, new HashSet<System.Action<Type, object>>());
                 listeners[key].Add(action);
             }
             else
             {
                 if (!listenersToAdd.ContainsKey(key))
-                {
                     listenersToAdd.Add(key, new HashSet<System.Action<Type, object>>());
-                    listenersToAdd[key].Add(action);
-                }
-                else if (!listenersToAdd[key].Contains(action))
-                {
-                    listenersToAdd[key].Add(action);
-                }
-
+                listenersToAdd[key].Add(action);
+                
                 if (listenersToRemove.ContainsKey(key) && listenersToRemove[key].Contains(action))
                     listenersToRemove[key].Remove(action);
             }
         }
 
-        public bool HasListener(string key)
+        /// <summary>
+        /// Is the listener already registered on the specified key.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <param name="action">The listener to check.</param>
+        /// <returns>Whether the listener is already registered with the specified key.</returns>
+        public bool IsListenerRegistered(string key, System.Action<Type, object> action)
         {
-            if (listeners.ContainsKey(key) || listenersToAdd.ContainsKey(key))
+            if ((listeners.ContainsKey(key) && listeners[key].Contains(action)) || (listenersToAdd.ContainsKey(key) && listenersToAdd[key].Contains(action)))
                 return true;
-            else if (listenersToRemove.ContainsKey(key))
+            else if (listenersToRemove.ContainsKey(key) && listenersToRemove[key].Contains(action))
                 return false;
             return false;
         }
 
+        /// <summary>
+        /// Does the specified key have any listeners.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>Whether the key has any listeners.</returns>
+        public bool HasListener(string key)
+        {
+            if (NumberOfListeners(key) > 0)
+                return true;
+            else 
+                return false;
+        }
+
+        /// <summary>
+        /// How many listeners does the specified key have.
+        /// </summary>
+        /// <param name="key">The key to check.</param>
+        /// <returns>Number of listeners registered with the specified key.</returns>
+        public int NumberOfListeners(string key)
+        {
+            int count = 0;
+            if (listeners.ContainsKey(key))
+                count += listeners[key].Count;
+            if (listenersToAdd.ContainsKey(key))
+                count += listenersToAdd[key].Count;
+            if (listenersToRemove.ContainsKey(key))
+                count -= listenersToRemove[key].Count;
+            return count;
+        }
+
+        /// <summary>
+        /// Unregisters the listener from the specified key.
+        /// </summary>
+        /// <param name="key">The key to not listen on.</param>
+        /// <param name="action">The listener to unregister.</param>
         public void UnregisterListener(string key, System.Action<Type, object> action)
         {
             if (!isUpdating)
@@ -214,14 +351,8 @@ namespace PineBT
             else
             {
                 if (!listenersToRemove.ContainsKey(key))
-                {
                     listenersToRemove.Add(key, new HashSet<System.Action<Type, object>>());
-                    listenersToRemove[key].Add(action);
-                }
-                else if (!listenersToRemove[key].Contains(action))
-                {
-                    listenersToRemove[key].Add(action);
-                }
+                listenersToRemove[key].Add(action);
 
                 if (listenersToAdd.ContainsKey(key) && listenersToAdd[key].Contains(action))
                     listenersToAdd[key].Remove(action);

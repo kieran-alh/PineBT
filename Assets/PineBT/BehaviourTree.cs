@@ -12,8 +12,9 @@ namespace PineBT
     {
         /// <summary>The root node of the tree.</summary>
         protected Node root;
+        protected Blackboard blackboard;
         
-        private PineTreeManager treeManager = PineTreeUnityContext.GetInstance().TreeManager;
+        private PineTreeManager treeManager = PineTreeUnityContext.Instance().TreeManager;
 
         /// <summary>Constructs a <c>Tree</c> with a basic name, and no root.</summary>
         public BehaviourTree() : this("Tree", null)
@@ -28,17 +29,27 @@ namespace PineBT
         {}
 
         /// <summary>Constructs a <c>Tree</c> with a custom name, and a provided root.</summary>
-        public BehaviourTree(string name, Node root) : base(name)
+        public BehaviourTree(string name, Node root) : this(name, new Blackboard(), root)
+        {}
+
+        /// <summary>Constructs a <c>Tree</c> with a custom name, a custom blackboard, and a provided root.</summary>
+        public BehaviourTree(string name, Blackboard blackboard, Node root) : base(name)
         {
             this.root = root;
+            this.blackboard = blackboard;
             this.tree = this;
             if (root != null)
                 root.SetParent(this);
-        }
+        } 
 
         public PineTreeManager TreeManager
         {
             get {return treeManager;}
+        }
+
+        public Blackboard Blackboard
+        {
+            get {return blackboard;}
         }
 
         /// <summary>Set the Tree's root node.</summary>
@@ -62,7 +73,7 @@ namespace PineBT
         /// </summary>
         public void Enable()
         {
-            PineTreeUnityContext.GetInstance().TreeManager.RegisterTree(this);
+            treeManager.RegisterTree(this);
         }
 
         /// <summary>
@@ -70,8 +81,8 @@ namespace PineBT
         /// </summary>
         public void Disable()
         {
-            //TODO: Is clean necessary?
-            PineTreeUnityContext.GetInstance().TreeManager.UnregisterTree(this);
+            if (treeManager != null)
+                treeManager.UnregisterTree(this);
         }
         
         /// <summary>Called before the <c>Tree</c> begins execution.</summary>
