@@ -7,11 +7,14 @@ namespace PineBT
     /// <summary> 
     /// The BehaviourTree class acts as an overall anchor for every <see cref="Node"/> in the tree.
     /// The BehaviourTree contains the Root node and receives updates from the <see cref="PineTreeManager"/>.
+    /// Each BehaviourTree contains a Blackboard and if a Blackboard isn't provided in construction then
+    /// a Blackboard is created.
     /// </summary>
     public class BehaviourTree : Node
     {
         /// <summary>The root node of the tree.</summary>
         protected Node root;
+        /// <summary>The Blackboard for the tree.</summary>
         protected Blackboard blackboard;
         
         private PineTreeManager treeManager = PineTreeUnityContext.Instance().TreeManager;
@@ -28,11 +31,14 @@ namespace PineBT
         public BehaviourTree(Node root) : this("Tree", root)
         {}
 
-        /// <summary>Constructs a <c>Tree</c> with a custom name, and a provided root.</summary>
+        /// <summary>
+        /// Constructs a <c>Tree</c> with a custom name, and a provided root.
+        /// Creates a Blackboard.
+        /// </summary>
         public BehaviourTree(string name, Node root) : this(name, new Blackboard(), root)
         {}
 
-        /// <summary>Constructs a <c>Tree</c> with a custom name, a custom blackboard, and a provided root.</summary>
+        /// <summary>Constructs a <c>Tree</c> with a provided name, blackboard, and root node.</summary>
         public BehaviourTree(string name, Blackboard blackboard, Node root) : base(name)
         {
             this.root = root;
