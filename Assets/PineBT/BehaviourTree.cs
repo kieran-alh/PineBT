@@ -7,13 +7,17 @@ namespace PineBT
     /// <summary> 
     /// The BehaviourTree class acts as an overall anchor for every <see cref="Node"/> in the tree.
     /// The BehaviourTree contains the Root node and receives updates from the <see cref="PineTreeManager"/>.
+    /// Each BehaviourTree contains a Blackboard and if a Blackboard isn't provided in construction then
+    /// a Blackboard is created.
     /// </summary>
     public class BehaviourTree : Node
     {
         /// <summary>The root node of the tree.</summary>
         protected Node root;
+        /// <summary>The Blackboard for the tree.</summary>
+        protected Blackboard blackboard;
         
-        private PineTreeManager treeManager = PineTreeUnityContext.GetInstance().TreeManager;
+        private PineTreeManager treeManager = PineTreeUnityContext.Instance().TreeManager;
 
         /// <summary>Constructs a <c>Tree</c> with a basic name, and no root.</summary>
         public BehaviourTree() : this("Tree", null)
@@ -27,18 +31,31 @@ namespace PineBT
         public BehaviourTree(Node root) : this("Tree", root)
         {}
 
-        /// <summary>Constructs a <c>Tree</c> with a custom name, and a provided root.</summary>
-        public BehaviourTree(string name, Node root) : base(name)
+        /// <summary>
+        /// Constructs a <c>Tree</c> with a custom name, and a provided root.
+        /// Creates a Blackboard.
+        /// </summary>
+        public BehaviourTree(string name, Node root) : this(name, new Blackboard(), root)
+        {}
+
+        /// <summary>Constructs a <c>Tree</c> with a provided name, blackboard, and root node.</summary>
+        public BehaviourTree(string name, Blackboard blackboard, Node root) : base(name)
         {
             this.root = root;
+            this.blackboard = blackboard;
             this.tree = this;
             if (root != null)
                 root.SetParent(this);
-        }
+        } 
 
         public PineTreeManager TreeManager
         {
             get {return treeManager;}
+        }
+
+        public Blackboard Blackboard
+        {
+            get {return blackboard;}
         }
 
         /// <summary>Set the Tree's root node.</summary>
@@ -62,7 +79,7 @@ namespace PineBT
         /// </summary>
         public void Enable()
         {
-            PineTreeUnityContext.GetInstance().TreeManager.RegisterTree(this);
+            treeManager.RegisterTree(this);
         }
 
         /// <summary>
@@ -70,7 +87,8 @@ namespace PineBT
         /// </summary>
         public void Disable()
         {
-            PineTreeUnityContext.GetInstance().TreeManager.UnregisterTree(this);
+            if (treeManager != null)
+                treeManager.UnregisterTree(this);
         }
         
         /// <summary>Called before the <c>Tree</c> begins execution.</summary>

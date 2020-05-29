@@ -127,6 +127,7 @@ namespace PineBT
         /// </summary>
         public override void Start()
         {
+            // Register the Service as a timer to run infinitly
             if (!this.tree.TreeManager.HasTimer(serviceFunction))
                 this.tree.TreeManager.RegisterTimer(interval, -1, serviceFunction);
             if (executeOnEachStart || !initialExecution)
