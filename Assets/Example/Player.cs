@@ -29,19 +29,15 @@ public class Player : MonoBehaviour
         Service exampleService = new Service("ExampleBB", 2f, ExampleBlackboardService, false, true);
         Service debugService = new Service("Debug", 5f, DebuggerService, false, true);
 
-        RandomSelector moveSelector = new RandomSelector("MoveSelector");
         Action move1 = new Action("Move1", () => Move(point1.position));
         Action move2 = new Action("Move2", () => Move(point2.position));
         Action move3 = new Action("Move3", () => Move(point3.position));
         Action move4 = new Action("Move4", () => Move(point4.position));
+        RandomSelector moveSelector = new RandomSelector("MoveSelector", move1, move2, move3, move4);
 
         tree.SetRoot(debugService);
             debugService.AddChild(exampleService);
                 exampleService.AddChild(moveSelector);
-                    moveSelector.AddChild(move1);
-                    moveSelector.AddChild(move2);
-                    moveSelector.AddChild(move3);
-                    moveSelector.AddChild(move4);
 
         tree.Enable();
         blackboard.Enable();

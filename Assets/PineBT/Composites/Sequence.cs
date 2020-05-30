@@ -18,13 +18,13 @@ namespace PineBT
         /// <summary>
         /// Creates a Sequence with a custom name and instantiates the children node list.
         /// </summary>
-        public Sequence(string name) : this(name, new List<Node>())
+        public Sequence(string name) : base(name)
         {}
 
         /// <summary>
-        /// Creates a Sequence with a custom name and a provided children node list.
+        /// Creates a Sequence with a custom name and a provided set of children.
         /// </summary>
-        public Sequence(string name, List<Node> nodes) : base(name, nodes)
+        public Sequence(string name, params Node[] nodes) : base(name, nodes)
         {}
         
         /// <summary>

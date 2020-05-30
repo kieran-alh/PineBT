@@ -18,11 +18,21 @@ namespace PineBT
         protected List<Node> children;
 
         /// <summary>
-        /// Creates a new composite with a custom name, and a provided list of children.
+        /// Creates a new composite with a custom name, and a initializes a list of children.
         /// </summary>
-        public Composite(string name, List<Node> nodes) : base(name)
+        public Composite(string name) : base(name)
         {
-            children = nodes;
+            children = new List<Node>();
+            runningChild = null;
+            currentChildIndex = 0;
+        }
+
+        /// <summary>
+        /// Creates a new composite with a custom name, and a provided set of children.
+        /// </summary>
+        public Composite(string name, params Node[] nodes) : base(name)
+        {
+            children = new List<Node>(nodes);
             runningChild = null;
             currentChildIndex = 0;
         }
