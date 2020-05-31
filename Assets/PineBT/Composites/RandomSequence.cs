@@ -18,13 +18,13 @@ namespace PineBT
         /// <summary>
         /// Creates a RandomSequence with a custom name and instantiates the children node list.
         /// </summary>
-        public RandomSequence(string name) : this(name, new List<Node>())
+        public RandomSequence(string name) : base(name)
         {}
 
         /// <summary>
-        /// Creates a RandomSequence with a custom name and a provided children node list.
+        /// Creates a RandomSequence with a custom name and a provided set of children.
         /// </summary>
-        public RandomSequence(string name, List<Node> nodes) : base(name, nodes)
+        public RandomSequence(string name, params Node[] nodes) : base(name, nodes)
         {}
         
         /// <summary>

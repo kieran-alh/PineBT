@@ -18,13 +18,13 @@ namespace PineBT
         /// <summary>
         /// Creates a Selector with a custom name and instantiates the children node list.
         /// </summary>
-        public Selector(string name) : this(name, new List<Node>())
+        public Selector(string name) : base(name)
         {}
 
         /// <summary>
-        /// Creates a Selector with a custom name and a provided children node list.
+        /// Creates a Selector with a custom name and a provided set of children.
         /// </summary>
-        public Selector(string name, List<Node> nodes) : base(name, nodes)
+        public Selector(string name, params Node[] nodes) : base(name, nodes)
         {}
         
         /// <summary>
