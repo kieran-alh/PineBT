@@ -87,6 +87,8 @@ namespace PineBT
 
             foreach(System.Action action in timersToRemove)
             {
+                if (!timers.ContainsKey(action))
+                    continue;
                 ResetTimer(timers[action]);
                 timers.Remove(action);
             }

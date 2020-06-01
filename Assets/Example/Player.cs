@@ -33,7 +33,7 @@ public class Player : MonoBehaviour
         Action move3 = new Action("Move3", () => Move(point3.position));
         Action move4 = new Action("Move4", () => Move(point4.position));
 
-        Limiter limiter = new Limiter("Limiter", 5.0f, true, new Action(LimitExample));
+        Cooldown limiter = new Cooldown("Limiter", 5.0f, true, new Action(LimitExample));
         RandomSelector moveSelector = new RandomSelector("MoveSelector", move1, move2, move3, move4);
 
         Sequence sequence = new Sequence("Sequence", moveSelector, limiter);
