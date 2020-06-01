@@ -27,17 +27,19 @@ public class Player : MonoBehaviour
         blackboard = new Blackboard();
 
         Service exampleService = new Service("ExampleBB", 2f, ExampleBlackboardService, false, true);
-        Service debugService = new Service("Debug", 5f, DebuggerService, false, true);
 
         Action move1 = new Action("Move1", () => Move(point1.position));
         Action move2 = new Action("Move2", () => Move(point2.position));
         Action move3 = new Action("Move3", () => Move(point3.position));
         Action move4 = new Action("Move4", () => Move(point4.position));
+
+        Limiter limiter = new Limiter("Limiter", 5.0f, true, new Action(LimitExample));
         RandomSelector moveSelector = new RandomSelector("MoveSelector", move1, move2, move3, move4);
 
-        tree.SetRoot(debugService);
-            debugService.AddChild(exampleService);
-                exampleService.AddChild(moveSelector);
+        Sequence sequence = new Sequence("Sequence", moveSelector, limiter);
+
+        tree.SetRoot(exampleService);
+            exampleService.AddChild(sequence);
 
         tree.Enable();
         blackboard.Enable();
@@ -68,12 +70,13 @@ public class Player : MonoBehaviour
     void BlackboardListener(Blackboard.Type type, object value)
     {
         Vector3 val = (Vector3)value;
-        Debug.Log($"TYPE: {type} : {value.ToString()}");
+        // Debug.Log($"TYPE: {type} : {value.ToString()}");
     }
 
-    void DebuggerService()
+    State LimitExample()
     {
-        // tree.TreeManager.DebugTimers();
+        Debug.Log($"Limiter: {Time.time}");
+        return State.SUCCESS;
     }
 
     void OnDisable()

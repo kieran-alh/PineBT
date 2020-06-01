@@ -56,12 +56,12 @@ namespace PineBT
                 if (timer.IsThresholdMet(updateElapsedTime))
                 {
                     action.Invoke();
-                    timer.Schedule(updateElapsedTime);
-
                     timer.executions--;
 
                     if (timer.executions == 0)
                         UnregisterTimer(action);
+                    else
+                        timer.Schedule(updateElapsedTime);
                 }
             }
 
@@ -87,7 +87,7 @@ namespace PineBT
 
             foreach(System.Action action in timersToRemove)
             {
-                ReturnTimer(timers[action]);
+                ResetTimer(timers[action]);
                 timers.Remove(action);
             }
 
@@ -141,7 +141,6 @@ namespace PineBT
         {
             if (!isUpdating && !isFixedUpdating)
             {
-                
                 if (!trees.Remove(tree))
                 {
                     #if UNITY_EDITOR
@@ -186,10 +185,11 @@ namespace PineBT
 
                 if (!timersToAdd.ContainsKey(action))
                     timersToAdd[action] = GetTimer();
-                
+
                 timer = timersToAdd[action];
             }
             
+            timer.inUse = true;
             timer.executions = executions;
             timer.interval = interval;
             // TODO: Only schedules timer for Update, add FixedUpdate
@@ -223,7 +223,7 @@ namespace PineBT
                 if (timers.ContainsKey(action))
                 {
                     timer = timers[action];
-                    ReturnTimer(timer);
+                    ResetTimer(timer);
                     timers.Remove(action);
                 }
             }
@@ -234,11 +234,11 @@ namespace PineBT
                 if (timersToAdd.ContainsKey(action))
                 {
                     timer = timersToAdd[action];
-                    ReturnTimer(timer);
+                    ResetTimer(timer);
                     timersToAdd.Remove(action);
                 }
                 
-                if (timers.ContainsKey(action))
+                if (!timersToRemove.Contains(action))
                     timersToRemove.Add(action);
             }
         }
@@ -264,18 +264,18 @@ namespace PineBT
             if (timer == null)
             {
                 timer = new Timer();
-                timer.inUse = true;
                 timerPool.Add(timer);
             }
+            timer.inUse = true;
             runningTimers++;
             return timer;
         }
 
         /// <summary>
-        /// Resets and places an instantiated that isn't being used in the <see cref="timerPool"/> Queue.
+        /// Resets instantiated timer to be reused.
         /// </summary>
         /// <param name="timer">The unused timer.</param>
-        private void ReturnTimer(Timer timer)
+        private void ResetTimer(Timer timer)
         {
             timer.inUse = false;
             timer.timeThreshold = 0;
