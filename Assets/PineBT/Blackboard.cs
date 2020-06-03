@@ -14,23 +14,23 @@ namespace PineBT
     /// </summary>
     public class Blackboard
     {
-        // The Blackboard's name
+        /// <summary>The Blackboard's name.</summary>
         private string name;
-        // The Blackboard's parent
+        /// <summary>The Blackboard's parent.</summary>
         private Blackboard parent;
-        // The primary data store for the Blackboard
+        /// <summary>The primary data store for the Blackboard.</summary>
         private Dictionary<string, object> data = new Dictionary<string, object>();
-        // The primary set of event listeners for the Blackboard data
+        /// <summary>The primary set of event listeners for the Blackboard data.</summary>
         private Dictionary<string, HashSet<System.Action<Type, object>>> listeners = new Dictionary<string, HashSet<System.Action<Type, object>>>();
 
-        // Listeners to be added in the TriggerListeners cycle
+        /// <summary>Listeners to be added in the TriggerListeners cycle.</summary>
         private Dictionary<string, HashSet<System.Action<Type, object>>> listenersToAdd = new Dictionary<string, HashSet<System.Action<Type, object>>>();
-        // Listeners to be removed in the TriggerListeners cycle
+        /// <summary>Listeners to be removed in the TriggerListeners cycle.</summary>
         private Dictionary<string, HashSet<System.Action<Type, object>>> listenersToRemove = new Dictionary<string, HashSet<System.Action<Type, object>>>();
-        // Is the Blackboard currenttly triggering its event listeners
+        /// <summary>Is the Blackboard currenttly triggering its event listeners.</summary>
         private bool isUpdating = false;
 
-        // List of data change notifications
+        /// <summary>List of data change notifications.</summary>
         private List<Notification> notifications = new List<Notification>();
 
         private PineTreeManager treeManager;

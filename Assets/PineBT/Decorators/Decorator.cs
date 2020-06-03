@@ -33,12 +33,12 @@ namespace PineBT
                 this.child = child;
                 this.child.SetParent(this);
             }
+        #if UNITY_EDITOR
             else
             {
-                #if UNITY_EDITOR
-                    Debug.LogError("Decorator nodes can have only one child node.");
-                #endif
+                Debug.LogError("Decorator nodes can have only one child node.");
             }
+        #endif
         }
 
         /// <summary>

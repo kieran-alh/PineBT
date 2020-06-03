@@ -22,6 +22,12 @@ namespace PineBT
         {}
 
         /// <summary>
+        /// Creates a RandomSelector with a default name and a provided set of children.
+        /// </summary>
+        public RandomSelector(params Node[] nodes) : base("RandomSelector", nodes)
+        {}
+
+        /// <summary>
         /// Creates a RandomSelector with a custom name and a provided set of children.
         /// </summary>
         public RandomSelector(string name, params Node[] nodes) : base(name, nodes)

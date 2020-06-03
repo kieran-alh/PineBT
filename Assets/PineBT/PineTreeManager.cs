@@ -6,15 +6,23 @@ namespace PineBT
 {
     public class PineTreeManager
     {
+        /// <summary>Primary list of trees registered to receive updates.</summary>
         private List<BehaviourTree> trees = new List<BehaviourTree>();
+        /// <summary>Trees to be added to the primary tree list during the update cycle.</summary>
         private HashSet<BehaviourTree> treesToAdd = new HashSet<BehaviourTree>();
+        /// <summary>Trees to be removed from the primary tree list during the update cycle.</summary>
         private HashSet<BehaviourTree> treesToRemove = new HashSet<BehaviourTree>();
 
+        /// <summary>Set of timed functions to be evaluated during the update cycle.</summary>
         private Dictionary<System.Action, Timer> timers = new Dictionary<System.Action, Timer>();
+        /// <summary>Set of timed functions to be added to the primary timers during the update cycle.</summary>
         private Dictionary<System.Action, Timer> timersToAdd = new Dictionary<System.Action, Timer>();
+        /// <summary>Set of timed functions to be removed from the primary timers during the update cycle.</summary>
         private HashSet<System.Action> timersToRemove = new HashSet<System.Action>();
 
-        // Stores timers that are not in use
+        /// <summary>
+        /// Stores all timer classes (both in use and not in use) that have been instantiated.
+        /// </summary>
         private List<Timer> timerPool = new List<Timer>();
         private int runningTimers = 0;
 
@@ -120,12 +128,12 @@ namespace PineBT
                 
                 if (trees.IndexOf(tree) == -1)
                     trees.Add(tree);
+            #if UNITY_EDITOR
                 else
                 {
-                    #if UNITY_EDITOR
-                        Debug.LogError("Tree already registered.");
-                    #endif
+                    Debug.LogError("Tree already registered.");
                 }
+            #endif
             }
             else
             {
@@ -143,12 +151,11 @@ namespace PineBT
         {
             if (!isUpdating && !isFixedUpdating)
             {
-                if (!trees.Remove(tree))
-                {
-                    #if UNITY_EDITOR
-                        Debug.LogError("Tree already unregistered.");
-                    #endif
-                }
+                bool removed = trees.Remove(tree);
+            #if UNITY_EDITOR
+                if (!removed)
+                    Debug.LogError("Tree already unregistered.");
+            #endif
             }
             else
             {

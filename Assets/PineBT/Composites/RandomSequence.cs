@@ -22,6 +22,12 @@ namespace PineBT
         {}
 
         /// <summary>
+        /// Creates a RandomSequence with a default name and a provided set of children.
+        /// </summary>
+        public RandomSequence(params Node[] nodes) : base("RandomSequence", nodes)
+        {}
+
+        /// <summary>
         /// Creates a RandomSequence with a custom name and a provided set of children.
         /// </summary>
         public RandomSequence(string name, params Node[] nodes) : base(name, nodes)

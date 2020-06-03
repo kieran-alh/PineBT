@@ -64,12 +64,12 @@ namespace PineBT
                     children[currentChildIndex].Start();
                     children[currentChildIndex].Execute();
                 }
+            #if UNITY_EDITOR
                 else
                 {
-                    #if UNITY_EDITOR
-                        Debug.LogError("Out of children to Execute");
-                    #endif
+                    Debug.LogError("Out of children to Execute");
                 }
+            #endif
             }
         }
     }

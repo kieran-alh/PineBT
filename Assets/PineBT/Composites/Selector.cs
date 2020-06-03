@@ -22,6 +22,12 @@ namespace PineBT
         {}
 
         /// <summary>
+        /// Creates a Selector with a default name and a provided set of children.
+        /// </summary>
+        public Selector(params Node[] nodes) : base("Selector", nodes)
+        {}
+
+        /// <summary>
         /// Creates a Selector with a custom name and a provided set of children.
         /// </summary>
         public Selector(string name, params Node[] nodes) : base(name, nodes)

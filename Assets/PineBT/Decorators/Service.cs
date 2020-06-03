@@ -9,7 +9,6 @@ namespace PineBT
     /// By default a Service will only run if it is on a branch that is also running, 
     /// which is why Services are commonly placed near the root of of the tree.
     /// </para>
-    /// 
     /// <para>A Service can be setup to run continuously independent of whether its branch is running.</para>
     /// </summary>
     public class Service : Decorator
@@ -34,8 +33,8 @@ namespace PineBT
         // Has the service done an initial execution on its first Start call
         private bool initialExecution = false;
 
-        /// <summary><para>
-        /// Service thats executes at every Update call.</para>
+        /// <summary>
+        /// <para>Service thats executes at every Update call.</para>
         /// <para><see cref="executeOnEachStart"/> Defaults to true, meaning the Service will perform another execution 
         /// independently of the current time between intervals.</para>
         /// <para><see cref="executeContinuously"/> Defaults to false, 

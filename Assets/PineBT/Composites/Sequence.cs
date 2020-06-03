@@ -22,6 +22,12 @@ namespace PineBT
         {}
 
         /// <summary>
+        /// Creates a Sequence with a default name and a provided set of children.
+        /// </summary>
+        public Sequence(params Node[] nodes) : base("Sequence", nodes)
+        {}
+
+        /// <summary>
         /// Creates a Sequence with a custom name and a provided set of children.
         /// </summary>
         public Sequence(string name, params Node[] nodes) : base(name, nodes)

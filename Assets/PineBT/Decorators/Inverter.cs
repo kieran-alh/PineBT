@@ -9,11 +9,19 @@ namespace PineBT
     /// </summary>
     public class Inverter : Decorator
     {
-        /// <summary>Creates an Inverter with a custom name.</summary>
+        /// <summary>Inverter with a default name.</summary>
+        public Inverter() : base("Inverter")
+        {}
+
+        /// <summary>Inverter with a custom name.</summary>
         public Inverter(string name) : base(name)
         {}
 
-        /// <summary>Creates an Inverter with a custom name, and a provided child.</summary>
+        /// <summary>Inverter with a default name, and a provided child.</summary>
+        public Inverter(Node child) : base("Inverter", child)
+        {}
+
+        /// <summary>Inverter with a custom name, and a provided child.</summary>
         public Inverter(string name, Node child) : base(name, child)
         {}
 

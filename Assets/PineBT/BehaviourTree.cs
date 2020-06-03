@@ -14,6 +14,7 @@ namespace PineBT
     {
         /// <summary>The root node of the tree.</summary>
         protected Node root;
+
         /// <summary>The Blackboard for the tree.</summary>
         protected Blackboard blackboard;
         
@@ -66,12 +67,12 @@ namespace PineBT
                 this.root = root;
                 root.SetParent(this);
             }
+        #if UNITY_EDITOR
             else
             {
-                #if UNITY_EDITOR
-                    Debug.LogError($"Tree [{name}] can only have one root.");
-                #endif
+                Debug.LogError($"Tree [{name}] can only have one root.");
             }
+        #endif
         }
 
         /// <summary>
