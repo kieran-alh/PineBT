@@ -35,6 +35,10 @@
         /// The <see cref="State"/> to return when the Cooldown is executed during the cooldown period. Defaults to <see cref="State.SUCCESS"/>.
         /// </summary>
         private State coolDownReturnState = State.SUCCESS;
+        /// <summary>
+        /// The amount of random variation added to the cooldown time.
+        /// </summary>
+        private float timerRandomVariation;
 
         // Is is the cooldown period over and can the Child be executed.
         private bool canExecute = true;
@@ -50,9 +54,10 @@
         /// </summary>
         /// <param name="name">Name of the Cooldown Node.</param>
         /// <param name="coolDownTime">Length of the cooldown period.</param>
+        /// <param name="randomVariation">The amount of random variation added to the cooldown time.</param>
         /// <param name="coolDownReturnState">State to return during cooldown period.</param>
-        public Cooldown(string name, float coolDownTime, State coolDownReturnState) 
-        : this(name, coolDownTime, false)
+        public Cooldown(string name, float coolDownTime, float randomVariation, State coolDownReturnState) 
+        : this(name, coolDownTime, randomVariation, false)
         {
             this.coolDownReturnState = coolDownReturnState;
         }
@@ -67,14 +72,16 @@
         /// </summary>
         /// <param name="name">Name of the Cooldown Node.</param>
         /// <param name="coolDownTime">Length of the cooldown period.</param>
+        /// <param name="randomVariation">The amount of random variation added to the cooldown time.</param>
         /// <param name="returnPreviousChildState">Whether to return the child's <see cref="State"/></param>
-        public Cooldown(string name, float coolDownTime, bool returnPreviousChildState) 
+        public Cooldown(string name, float coolDownTime, float randomVariation, bool returnPreviousChildState) 
         : base(name)
         {
             this.coolDownTime = coolDownTime;
             this.returnPreviousChildState = returnPreviousChildState;
             this.startCooldownAfterChild = false;
             this.cancelCooldownOnFailure = false;
+            this.timerRandomVariation = randomVariation;
             this.treeManager = PineTreeUnityContext.Instance().TreeManager;
         }
 
@@ -87,10 +94,11 @@
         /// </summary>
         /// <param name="name">Name of the Cooldown Node.</param>
         /// <param name="coolDownTime">Length of the cooldown period.</param>
+        /// <param name="randomVariation">The amount of random variation added to the cooldown time.</param>
         /// <param name="coolDownReturnState">State to return during cooldown period.</param>
         /// <param name="child">The child of the Cooldown decorator.</param>
-        public Cooldown(string name, float coolDownTime, State coolDownReturnState, Node child) 
-        : this(name, coolDownTime, false, child)
+        public Cooldown(string name, float coolDownTime, float randomVariation, State coolDownReturnState, Node child) 
+        : this(name, coolDownTime, randomVariation, false, child)
         {
             this.coolDownReturnState = coolDownReturnState;
         }
@@ -105,15 +113,17 @@
         /// </summary>
         /// <param name="name">Name of the Cooldown Node.</param>
         /// <param name="coolDownTime">Length of the cooldown period.</param>
+        /// <param name="randomVariation">The amount of random variation added to the cooldown time.</param>
         /// <param name="returnPreviousChildState">Whether to return the child's <see cref="State"/></param>
         /// <param name="child">The child of the Cooldown decorator.</param>
-        public Cooldown(string name, float coolDownTime, bool returnPreviousChildState, Node child) 
+        public Cooldown(string name, float coolDownTime, float randomVariation, bool returnPreviousChildState, Node child) 
         : base(name, child)
         {
             this.coolDownTime = coolDownTime;
             this.returnPreviousChildState = returnPreviousChildState;
             this.startCooldownAfterChild = false;
             this.cancelCooldownOnFailure = false;
+            this.timerRandomVariation = randomVariation;
             this.treeManager = PineTreeUnityContext.Instance().TreeManager;
         }
 
@@ -122,12 +132,13 @@
         /// </summary>
         /// <param name="name">Name of the Cooldown Node.</param>
         /// <param name="coolDownTime">Length of the cooldown period.</param>
+        /// <param name="randomVariation">The amount of random variation added to the cooldown time.</param>
         /// <param name="coolDownReturnState">State to return during cooldown period.</param>
         /// <param name="startCooldownAfterChild">
         /// Start the cooldown timer after the child has executed and returned a <see cref="State"/>.</param>
         /// <param name="cancelCooldownOnFailure">Cancel the cooldown period if the child's execution is a <see cref="State.FAILURE"/>.</param>
-        public Cooldown(string name, float coolDownTime, State coolDownReturnState, bool startCooldownAfterChild, bool cancelCooldownOnFailure) 
-        : this(name, coolDownTime, false, startCooldownAfterChild, cancelCooldownOnFailure)
+        public Cooldown(string name, float coolDownTime, float randomVariation, State coolDownReturnState, bool startCooldownAfterChild, bool cancelCooldownOnFailure) 
+        : this(name, coolDownTime, randomVariation, false, startCooldownAfterChild, cancelCooldownOnFailure)
         {
             this.coolDownReturnState = coolDownReturnState;
         }
@@ -138,17 +149,19 @@
         /// </summary>
         /// <param name="name">Name of the Cooldown Node.</param>
         /// <param name="coolDownTime">Length of the cooldown period.</param>
+        /// <param name="randomVariation">The amount of random variation added to the cooldown time.</param>
         /// <param name="returnPreviousChildState">Whether to return the child's <see cref="State"/></param>
         /// <param name="startCooldownAfterChild">
         /// Start the cooldown timer after the child has executed and returned a <see cref="State"/>.</param>
         /// <param name="cancelCooldownOnFailure">Cancel the cooldown period if the child's execution is a <see cref="State.FAILURE"/>.</param>
-        public Cooldown(string name, float coolDownTime, bool returnPreviousChildState, bool startCooldownAfterChild, bool cancelCooldownOnFailure) 
+        public Cooldown(string name, float coolDownTime, float randomVariation, bool returnPreviousChildState, bool startCooldownAfterChild, bool cancelCooldownOnFailure) 
         : base(name)
         {
             this.coolDownTime = coolDownTime;
             this.returnPreviousChildState = returnPreviousChildState;
             this.startCooldownAfterChild = startCooldownAfterChild;
             this.cancelCooldownOnFailure = cancelCooldownOnFailure;
+            this.timerRandomVariation = randomVariation;
             this.treeManager = PineTreeUnityContext.Instance().TreeManager;
         }
 
@@ -157,13 +170,14 @@
         /// </summary>
         /// <param name="name">Name of the Cooldown Node.</param>
         /// <param name="coolDownTime">Length of the cooldown period.</param>
+        /// <param name="randomVariation">The amount of random variation added to the cooldown time.</param>
         /// <param name="coolDownReturnState">State to return during cooldown period.</param>
         /// <param name="startCooldownAfterChild">
         /// Start the cooldown timer after the child has executed and returned a <see cref="State"/>.</param>
         /// <param name="cancelCooldownOnFailure">Cancel the cooldown period if the child's execution is a <see cref="State.FAILURE"/>.</param>
         /// <param name="child">The child of the Cooldown decorator.</param>
-        public Cooldown(string name, float coolDownTime, State coolDownReturnState, bool startCooldownAfterChild, bool cancelCooldownOnFailure, Node child) 
-        : this(name, coolDownTime, false, startCooldownAfterChild, cancelCooldownOnFailure, child)
+        public Cooldown(string name, float coolDownTime, float randomVariation, State coolDownReturnState, bool startCooldownAfterChild, bool cancelCooldownOnFailure, Node child) 
+        : this(name, coolDownTime, randomVariation, false, startCooldownAfterChild, cancelCooldownOnFailure, child)
         {
             this.coolDownReturnState = coolDownReturnState;
         }
@@ -174,18 +188,20 @@
         /// </summary>
         /// <param name="name">Name of the Cooldown Node.</param>
         /// <param name="coolDownTime">Length of the cooldown period.</param>
+        /// <param name="randomVariation">The amount of random variation added to the cooldown time.</param>
         /// <param name="returnPreviousChildState">Whether to return the child's <see cref="State"/></param>
         /// <param name="startCooldownAfterChild">
         /// Start the cooldown timer after the child has executed and returned a <see cref="State"/>.</param>
         /// <param name="cancelCooldownOnFailure">Cancel the cooldown period if the child's execution is a <see cref="State.FAILURE"/>.</param>
         /// <param name="child">The child of the Cooldown decorator.</param>
-        public Cooldown(string name, float coolDownTime, bool returnPreviousChildState, bool startCooldownAfterChild, bool cancelCooldownOnFailure, Node child) 
+        public Cooldown(string name, float coolDownTime, float randomVariation, bool returnPreviousChildState, bool startCooldownAfterChild, bool cancelCooldownOnFailure, Node child) 
         : base(name, child)
         {
             this.coolDownTime = coolDownTime;
             this.returnPreviousChildState = returnPreviousChildState;
             this.startCooldownAfterChild = startCooldownAfterChild;
             this.cancelCooldownOnFailure = cancelCooldownOnFailure;
+            this.timerRandomVariation = randomVariation;
             this.treeManager = PineTreeUnityContext.Instance().TreeManager;
         }
 
@@ -203,7 +219,7 @@
                 {
                     // Reset canExecute to false for next cooldown period and start timer
                     canExecute = false;
-                    treeManager.RegisterTimer(this.coolDownTime, 1, OnCooldownTimeReached);
+                    treeManager.RegisterTimer(this.coolDownTime, timerRandomVariation, 1, OnCooldownTimeReached);
                 }
                 // Run Decorator base execute
                 base.Execute();
@@ -257,7 +273,7 @@
             if (startCooldownAfterChild && !(state == State.FAILURE && cancelCooldownOnFailure))
             {
                 canExecute = false;
-                treeManager.RegisterTimer(coolDownTime, 1, OnCooldownTimeReached);
+                treeManager.RegisterTimer(coolDownTime, timerRandomVariation, 1, OnCooldownTimeReached);
             }
         }
 
