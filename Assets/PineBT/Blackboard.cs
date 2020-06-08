@@ -42,14 +42,16 @@ namespace PineBT
 
         /// <summary>
         /// Constructs a Blackboard with a default name.
+        /// Random variation defaults to 0.
         /// </summary>
-        public Blackboard(float timerRandomVariation = 0.1f) : this("Blackboard", timerRandomVariation)
+        public Blackboard(float timerRandomVariation = 0f) : this("Blackboard", timerRandomVariation)
         {}
 
         /// <summary>
         /// Constructs a Blackboard with a custom name.
+        /// Random variation defaults to 0.
         /// </summary>
-        public Blackboard(string name, float timerRandomVariation = 0.1f)
+        public Blackboard(string name, float timerRandomVariation = 0f)
         {
             this.name = name;
             this.timerRandomVariation = timerRandomVariation;
@@ -57,14 +59,16 @@ namespace PineBT
 
         /// <summary>
         /// Constructs a Blackboard with a parent.
+        /// Random variation defaults to 0.
         /// </summary>
-        public Blackboard(Blackboard parent, float timerRandomVariation = 0.1f) : this("Blackboard", parent, timerRandomVariation)
+        public Blackboard(Blackboard parent, float timerRandomVariation = 0f) : this("Blackboard", parent, timerRandomVariation)
         {}
 
         /// <summary>
         /// Constructs a Blackboard with a custom name and parent.
+        /// Random variation defaults to 0.
         /// </summary>
-        public Blackboard(string name, Blackboard parent, float timerRandomVariation = 0.1f)
+        public Blackboard(string name, Blackboard parent, float timerRandomVariation = 0f)
         {
             this.name = name;
             this.parent = parent;
