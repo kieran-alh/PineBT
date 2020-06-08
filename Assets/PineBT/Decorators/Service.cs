@@ -29,6 +29,10 @@ namespace PineBT
         /// Defaults to false, meaning if the branch the Service is on isn't receiving Update calls, the Service will not execute.
         /// </summary>
         private bool executeContinuously = false;
+        /// <summary>
+        /// The amount of random variation added to the service's timer.
+        /// </summary>
+        private float timerRandomVariation = 0f;
 
         // Has the service done an initial execution on its first Start call
         private bool initialExecution = false;
@@ -67,11 +71,26 @@ namespace PineBT
         /// Defaults to true, meaning the Service will perform another execution independently of the current time between intervals.</param>
         /// <param name="executeContinuously">Whether the service should continue to execute even if its branch isn't running.
         /// Defaults to false, meaning if the branch the Service is on isn't receiving Update calls, the Service will not execute.</param>
-        public Service(
-            string name, float interval, System.Action service, bool executeOnEachStart, bool executeContinuously) 
-            : base(name)
+        public Service(string name, float interval, System.Action service, bool executeOnEachStart, bool executeContinuously) 
+        : this(name, interval, 0f, service, executeOnEachStart, executeContinuously)
+        {}
+
+        /// <summary>
+        /// Named Service thats executes at the interval rate with random variation.
+        /// </summary>
+        /// <param name="name">Name of the Service</param>
+        /// <param name="interval">The time frequency the Service should be executed. Example: 0.150f = 150 milliseconds.</param>
+        /// <param name="randomVariation">Time randomly added to the interval.</param>
+        /// <param name="service">The function to be executed.</param>
+        /// <param name="executeOnEachStart">Whether the service should additionally execute on each <see cref="Start"/> call.
+        /// Defaults to true, meaning the Service will perform another execution independently of the current time between intervals.</param>
+        /// <param name="executeContinuously">Whether the service should continue to execute even if its branch isn't running.
+        /// Defaults to false, meaning if the branch the Service is on isn't receiving Update calls, the Service will not execute.</param>
+        public Service(string name, float interval, float randomVariation, System.Action service, bool executeOnEachStart, bool executeContinuously) 
+        : base(name)
         {
             this.interval = interval;
+            this.timerRandomVariation = randomVariation;
             this.serviceFunction = service;
             this.executeOnEachStart = executeOnEachStart;
             this.executeContinuously = executeContinuously;
@@ -88,11 +107,27 @@ namespace PineBT
         /// <param name="executeContinuously">Whether the service should continue to execute even if its branch isn't running.
         /// Defaults to false, meaning if the branch the Service is on isn't receiving Update calls, the Service will not execute.</param>
         /// <param name="child">The Decorator's child Node.</param>
-        public Service(
-            string name, float interval, System.Action service, bool executeOnEachStart, bool executeContinuously, Node child) 
-            : base(name, child)
+        public Service(string name, float interval, System.Action service, bool executeOnEachStart, bool executeContinuously, Node child) 
+        : this(name, interval, 0f, service, executeOnEachStart, executeContinuously, child)
+        {}
+
+        /// <summary>
+        /// Named Service thats executes at the interval rate.
+        /// </summary>
+        /// <param name="name">Name of the Service</param>
+        /// <param name="interval">The time frequency the Service should be executed. Example: 0.150f = 150 milliseconds.</param>
+        /// <param name="randomVariation">Time randomly added to the interval.</param>
+        /// <param name="service">The function to be executed.</param>
+        /// <param name="executeOnEachStart">Whether the service should additionally execute on each <see cref="Start"/> call.
+        /// Defaults to true, meaning the Service will perform another execution independently of the current time between intervals.</param>
+        /// <param name="executeContinuously">Whether the service should continue to execute even if its branch isn't running.
+        /// Defaults to false, meaning if the branch the Service is on isn't receiving Update calls, the Service will not execute.</param>
+        /// <param name="child">The Decorator's child Node.</param>
+        public Service(string name, float interval, float randomVariation, System.Action service, bool executeOnEachStart, bool executeContinuously, Node child) 
+        : base(name, child)
         {
             this.interval = interval;
+            this.timerRandomVariation = randomVariation;
             this.serviceFunction = service;
             this.executeOnEachStart = executeOnEachStart;
             this.executeContinuously = executeContinuously;
@@ -128,7 +163,7 @@ namespace PineBT
         {
             // Register the Service as a timer to run infinitly
             if (!this.tree.TreeManager.HasTimer(serviceFunction))
-                this.tree.TreeManager.RegisterTimer(interval, -1, serviceFunction);
+                this.tree.TreeManager.RegisterTimer(interval, timerRandomVariation, -1, serviceFunction);
             if (executeOnEachStart || !initialExecution)
             {
                 serviceFunction.Invoke();

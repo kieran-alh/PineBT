@@ -36,32 +36,43 @@ namespace PineBT
         private PineTreeManager treeManager;
 
         /// <summary>
-        /// Constructs a Blackboard with a default name.
+        /// The amount of random variation added to the blackboard's TriggerListener's timer.
         /// </summary>
-        public Blackboard() : this("Blackboard")
+        private float timerRandomVariation;
+
+        /// <summary>
+        /// Constructs a Blackboard with a default name.
+        /// Random variation defaults to 0.
+        /// </summary>
+        public Blackboard(float timerRandomVariation = 0f) : this("Blackboard", timerRandomVariation)
         {}
 
         /// <summary>
         /// Constructs a Blackboard with a custom name.
+        /// Random variation defaults to 0.
         /// </summary>
-        public Blackboard(string name)
+        public Blackboard(string name, float timerRandomVariation = 0f)
         {
             this.name = name;
+            this.timerRandomVariation = timerRandomVariation;
         }
 
         /// <summary>
         /// Constructs a Blackboard with a parent.
+        /// Random variation defaults to 0.
         /// </summary>
-        public Blackboard(Blackboard parent) : this("Blackboard", parent)
+        public Blackboard(Blackboard parent, float timerRandomVariation = 0f) : this("Blackboard", parent, timerRandomVariation)
         {}
 
         /// <summary>
         /// Constructs a Blackboard with a custom name and parent.
+        /// Random variation defaults to 0.
         /// </summary>
-        public Blackboard(string name, Blackboard parent)
+        public Blackboard(string name, Blackboard parent, float timerRandomVariation = 0f)
         {
             this.name = name;
             this.parent = parent;
+            this.timerRandomVariation = timerRandomVariation;
         }
 
         /// <summary>
@@ -199,7 +210,7 @@ namespace PineBT
             if (notifications.Count == 0)
                 return;
 
-            treeManager.RegisterTimer(0, 1, TriggerListeners);
+            treeManager.RegisterTimer(0, timerRandomVariation, 1, TriggerListeners);
         }
 
         /// <summary>

@@ -26,14 +26,14 @@ public class Player : MonoBehaviour
         tree = new BehaviourTree("ExampleTree");
         blackboard = new Blackboard();
 
-        Service exampleService = new Service("ExampleBB", 2f, ExampleBlackboardService, false, true);
+        Service exampleService = new Service("ExampleBB", 2f, 0.25f, ExampleBlackboardService, false, true);
 
         Action move1 = new Action("Move1", () => Move(point1.position));
         Action move2 = new Action("Move2", () => Move(point2.position));
         Action move3 = new Action("Move3", () => Move(point3.position));
         Action move4 = new Action("Move4", () => Move(point4.position));
 
-        Cooldown limiter = new Cooldown("Limiter", 5.0f, true, new Action(LimitExample));
+        Cooldown limiter = new Cooldown("Limiter", 5.0f, 0.1f, true, new Action(LimitExample));
         RandomSelector moveSelector = new RandomSelector("MoveSelector", move1, move2, move3, move4);
 
         Sequence sequence = new Sequence("Sequence", moveSelector, limiter);

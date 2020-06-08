@@ -169,14 +169,15 @@ namespace PineBT
         }
 
         /// <summary>
-        /// Registers an action to run on a timer at the specified interval.
+        /// Registers an action to run on a timer at the specified interval, with random variation to the interval.
         /// If the action is already registered then its timer will be updated with the 
         /// new values passed in.
         /// </summary>
         /// <param name="interval">The time interval for the timer to run at.</param>
+        /// <param name="randomVariation">The amount of random variation added to the timer.</param>
         /// <param name="executions">How many times the timer should execute. -1 = Infinite.</param>
         /// <param name="action">The action to execute on the timer's interval.</param>
-        public void RegisterTimer(float interval, int executions, System.Action action)
+        public void RegisterTimer(float interval, float randomVariation, int executions, System.Action action)
         {
             Timer timer = null;
             if (!isUpdating && !isFixedUpdating)
@@ -201,8 +202,22 @@ namespace PineBT
             timer.inUse = true;
             timer.executions = executions;
             timer.interval = interval;
+            timer.randomVariation = randomVariation;
             // TODO: Only schedules timer for Update, add FixedUpdate
             timer.Schedule(updateElapsedTime);
+        }
+
+        /// <summary>
+        /// Registers an action to run on a timer at the specified interval.
+        /// If the action is already registered then its timer will be updated with the 
+        /// new values passed in.
+        /// </summary>
+        /// <param name="interval">The time interval for the timer to run at.</param>
+        /// <param name="executions">How many times the timer should execute. -1 = Infinite.</param>
+        /// <param name="action">The action to execute on the timer's interval.</param>
+        public void RegisterTimer(float interval, int executions, System.Action action)
+        {
+            RegisterTimer(interval, 0f, executions, action);
         }
 
         /// <summary>
@@ -320,6 +335,7 @@ namespace PineBT
             return timerPool.Count;
         }
 
+    #if UNITY_EDITOR
         /// <summary>
         /// Debug.Logs all timers.
         /// </summary>
@@ -335,6 +351,7 @@ namespace PineBT
                 Debug.Log(timer.ToString());
             }
         }
+    #endif
 
         private class Timer
         {
@@ -346,10 +363,16 @@ namespace PineBT
             public double timeThreshold = 0f;
             // The amount of times the timer should execute
             public int executions = 0;
+            // The randomness added to the time interval
+            public float randomVariation = 0f;
+
+            private float randomness;
 
             public void Schedule(double elapsedTime)
             {
-                timeThreshold = elapsedTime + interval;
+                // TODO: Check Gaussian Random Timer
+                randomness = (-randomVariation * UnityEngine.Random.value) + (randomVariation * UnityEngine.Random.value);
+                timeThreshold = elapsedTime + interval + randomness;
             }
 
             public bool IsThresholdMet(double elapsedTime)
@@ -359,7 +382,7 @@ namespace PineBT
 
             public override string ToString()
             {
-                return $"Timer U:{inUse.ToString()} I:{interval} E:{executions}";
+                return $"Timer U:{inUse.ToString()} I:{interval} R:{randomness} E:{executions}";
             }
         }
     }
