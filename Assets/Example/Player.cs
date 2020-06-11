@@ -43,11 +43,11 @@ public class Player : MonoBehaviour
 
         Service exampleService = new Service("ExampleBB", 2f, 0.25f, ExampleBlackboardService, false, true);
 
-        Parallel parallel1 = new Parallel("P1", Parallel.Policy.SEQUENCE, Parallel.Executor.REMAINING,
+        Parallel parallel1 = new Parallel("P1", Parallel.Policy.SEQUENCE, Parallel.Executor.ENTIRE,
             new Action("Move1", () => Move(point1.position)),
             new Action("Color1", () => ColorAction(color1))
         );
-        Parallel parallel2 = new Parallel("P2",
+        Parallel parallel2 = new Parallel("P2", Parallel.Policy.SEQUENCE_CONTINUE, Parallel.Executor.ENTIRE,
             new Action("Move1", () => Move(point2.position)),
             new Action("Color1", () => ColorAction(color2))
         );
@@ -55,7 +55,7 @@ public class Player : MonoBehaviour
             new Action("Move1", () => Move(point3.position)),
             new Action("Color1", () => ColorAction(color3))
         );
-        Parallel parallel4 = new Parallel("P4",
+        Parallel parallel4 = new Parallel("P4", Parallel.Policy.SELECTOR_CONTINUE, Parallel.Executor.ENTIRE,
             new Action(() => Move(point4.position)),
             new Action(() => ColorAction(color4))
         );

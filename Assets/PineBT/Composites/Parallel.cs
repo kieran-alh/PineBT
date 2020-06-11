@@ -14,8 +14,8 @@ namespace PineBT
         private int childrenSucceeded = 0;
         private int childrenFailed = 0;
         private int childrenRunning = 0;
-        private bool? lastChildState;
-        private State? finalState;
+        private State lastChildState;
+        private State finalState;
 
         public Parallel(string name) : this(name, Policy.SEQUENCE, Executor.ENTIRE)
         {}
@@ -73,16 +73,16 @@ namespace PineBT
         private void EntireExecute()
         {
             hasRunningChildren = false;
-            lastChildState = null;
+            lastChildState = State.NONE;
             for (currentChildIndex = 0; currentChildIndex < children.Count; currentChildIndex++)
             {
                 Node child = children[currentChildIndex];
                 ChildExecute(child);
 
-                if (lastChildState != null)
+                if (lastChildState == State.SUCCESS || lastChildState == State.FAILURE)
                 {
                     CancelRunningChildren(hasRunningChildren ? 0 : currentChildIndex + 1);
-                    if ((bool)lastChildState)
+                    if (lastChildState == State.SUCCESS)
                         Success();
                     else
                         Fail();
@@ -90,7 +90,7 @@ namespace PineBT
                 }
             }
 
-            if (finalState != null)
+            if (finalState != State.NONE)
             {
                 switch (finalState)
                 {
@@ -112,7 +112,7 @@ namespace PineBT
         private void RemainingExecute()
         {
             hasRunningChildren = false;
-            lastChildState = null;
+            lastChildState = State.NONE;
             for (currentChildIndex = 0; currentChildIndex < children.Count; currentChildIndex++)
             {
                 Node child = children[currentChildIndex];
@@ -130,11 +130,11 @@ namespace PineBT
                         break;
                 }
 
-                if (lastChildState != null)
+                if (lastChildState == State.SUCCESS || lastChildState == State.FAILURE)
                 {
                     CancelRunningChildren(hasRunningChildren ? 0 : currentChildIndex + 1);
                     ResetChildren();
-                    if ((bool)lastChildState)
+                    if (lastChildState == State.SUCCESS)
                         Success();
                     else
                         Fail();
@@ -142,14 +142,16 @@ namespace PineBT
                 }
             }
             
-            if (finalState != null)
+            if (finalState != State.NONE)
             {
                 switch (finalState)
                 {
                     case State.SUCCESS:
+                        ResetChildren();
                         Success();
                         break;
                     case State.FAILURE:
+                        ResetChildren();
                         Fail();
                         break;
                     default:
@@ -181,16 +183,22 @@ namespace PineBT
             switch (policy)
             {
                 case Policy.SEQUENCE:
+                    // If there are no running children and the last child has succeeded
+                    // set status to success
                     lastChildState = !hasRunningChildren && children.Last().State == State.SUCCESS
-                        ? (bool?) true
-                        : null;
+                        ? State.SUCCESS
+                        : State.NONE;
                     break;
                 case Policy.SEQUENCE_CONTINUE:
-                    // If finalState hasn't been set to Failure yet, set Success
-                    finalState = (finalState != State.FAILURE) ? State.SUCCESS : State.FAILURE;
+                    // If there are running children, State is Running
+                    // otherwise if a failure has occured keep the failure
+                    if (hasRunningChildren)
+                        finalState = State.RUNNING;
+                    else
+                        finalState = (finalState != State.FAILURE) ? State.SUCCESS : State.FAILURE;
                     break;
                 case Policy.SELECTOR:
-                    lastChildState = true;
+                    lastChildState = State.SUCCESS;
                     break;
                 case Policy.SELECTOR_CONTINUE:
                     finalState = !hasRunningChildren ? State.SUCCESS : State.RUNNING;
@@ -204,16 +212,24 @@ namespace PineBT
             switch (policy)
             {
                 case Policy.SEQUENCE:
-                    lastChildState = false;
+                    lastChildState = State.FAILURE;
                     break;
                 case Policy.SEQUENCE_CONTINUE:
                     finalState = !hasRunningChildren ? State.FAILURE : State.RUNNING;
                     break;
                 case Policy.SELECTOR:
-                    lastChildState = !hasRunningChildren && currentChildIndex == children.Count - 1 ? (bool?)false : null;
+                    // if all children have been executed and are not running, set State Failure 
+                    lastChildState = !hasRunningChildren && currentChildIndex == children.Count - 1 
+                        ? State.FAILURE 
+                        : State.NONE;
                     break;
                 case Policy.SELECTOR_CONTINUE:
-                    finalState = (finalState != State.SUCCESS) ? State.FAILURE : State.SUCCESS;
+                    // If there are running children, State is Running
+                    // otherwise if a success has occured keep the success
+                    if (hasRunningChildren)
+                        finalState = State.RUNNING;
+                    else
+                        finalState = (finalState != State.SUCCESS) ? State.FAILURE : State.SUCCESS;
                     break;
             }
         }
