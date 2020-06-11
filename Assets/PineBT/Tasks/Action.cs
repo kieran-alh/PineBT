@@ -1,8 +1,4 @@
-﻿using System.Collections;
-using System.Collections.Generic;
-using UnityEngine;
-
-namespace PineBT
+﻿namespace PineBT
 {
     /// <summary> 
     /// A basic task that can be passed functions to be executed.
