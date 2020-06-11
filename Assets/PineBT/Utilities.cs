@@ -19,6 +19,17 @@ namespace PineBT
                 list[size] = value;
             }
         }
+
+        /// <summary>
+        /// Gets the last item in the list.
+        /// </summary>
+        public static T Last<T>(this IList<T> list)
+        {
+            int n = list.Count;
+            if (n > 0)
+                return list[n - 1];
+            return default(T);
+        }
     }
 }
 

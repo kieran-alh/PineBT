@@ -29,8 +29,8 @@ namespace PineBT
         /// </summary>
         public override void Execute()
         {
-            State state = Run();
-            switch(state)
+            State taskState = Run();
+            switch(taskState)
             {
                 case State.SUCCESS:
                     Success();

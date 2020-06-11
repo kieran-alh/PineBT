@@ -6,6 +6,7 @@ namespace PineBT
 {
     public enum State
     {
+        NONE,
         FRESH,
         SUCCESS,
         FAILURE,

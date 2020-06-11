@@ -6,7 +6,7 @@ namespace PineBT
 {
     /// <summary> 
     /// The abstract base class of all nodes that have 1 or more children.
-    /// Composite nodes keep track of a single running child at a time.
+    /// The base Composite node keeps track of a single running child at a time.
     /// </summary>
     public abstract class Composite : Node
     {
@@ -70,6 +70,29 @@ namespace PineBT
                     Debug.LogError("Out of children to Execute");
                 }
             #endif
+            }
+        }
+
+        public override void Reset()
+        {
+            base.Reset();
+            ResetChildren();
+        }
+
+        protected void CancelRunningChildren(int index)
+        {
+            for (int i = index; i < children.Count; i++)
+            {
+                if (children[i].State == State.RUNNING)
+                    children[i].Cancel();
+            }
+        }
+
+        protected void ResetChildren()
+        {
+            for (int i = 0; i < children.Count; i++)
+            {
+                children[i].Reset();
             }
         }
     }
