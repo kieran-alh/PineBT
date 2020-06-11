@@ -134,7 +134,7 @@ GameObject:
   - component: {fileID: 114214219}
   - component: {fileID: 114214218}
   m_Layer: 0
-  m_Name: Marker
+  m_Name: Marker1
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -209,7 +209,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 114214217}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 0.1, z: 10}
+  m_LocalPosition: {x: 15, y: 0.1, z: 15}
   m_LocalScale: {x: 0.1, y: 1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -228,7 +228,7 @@ GameObject:
   - component: {fileID: 533760933}
   - component: {fileID: 533760932}
   m_Layer: 0
-  m_Name: Marker (3)
+  m_Name: Marker4
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -266,7 +266,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a28f58d7c0ec8574b88eeef9b92bd361, type: 2}
+  - {fileID: 2100000, guid: 3955a38a2794a9c49b52c3e093c2ba9b, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -303,7 +303,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 533760931}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 10, y: 0.1, z: -10}
+  m_LocalPosition: {x: 15, y: 0.1, z: -15}
   m_LocalScale: {x: 0.1, y: 1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -399,7 +399,7 @@ Transform:
   m_GameObject: {fileID: 679787507}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0, y: 1, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 2, y: 1, z: 2}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 3
@@ -421,6 +421,10 @@ MonoBehaviour:
   point2: {fileID: 890980021}
   point3: {fileID: 1429748441}
   point4: {fileID: 533760935}
+  color1: {r: 1, g: 0, b: 0, a: 0}
+  color2: {r: 0, g: 0.17519331, b: 1, a: 0}
+  color3: {r: 1, g: 1, b: 0, a: 0}
+  color4: {r: 0, g: 1, b: 0.19684815, a: 0}
 --- !u!1 &705507993
 GameObject:
   m_ObjectHideFlags: 0
@@ -526,7 +530,7 @@ GameObject:
   - component: {fileID: 890980019}
   - component: {fileID: 890980018}
   m_Layer: 0
-  m_Name: Marker (1)
+  m_Name: Marker2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -564,7 +568,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a28f58d7c0ec8574b88eeef9b92bd361, type: 2}
+  - {fileID: 2100000, guid: bb0f4f2e7a388184986f046223366c05, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -601,7 +605,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 890980017}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10, y: 0.1, z: 10}
+  m_LocalPosition: {x: -15, y: 0.1, z: 15}
   m_LocalScale: {x: 0.1, y: 1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}
@@ -659,8 +663,8 @@ Camera:
   near clip plane: 0.3
   far clip plane: 1000
   field of view: 60
-  orthographic: 0
-  orthographic size: 5
+  orthographic: 1
+  orthographic size: 17
   m_Depth: -1
   m_CullingMask:
     serializedVersion: 2
@@ -683,13 +687,13 @@ Transform:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
-  m_LocalRotation: {x: 0.2588191, y: 0, z: 0, w: 0.9659258}
-  m_LocalPosition: {x: 0, y: 15, z: -25}
+  m_LocalRotation: {x: 0.7071068, y: 0, z: 0, w: 0.7071068}
+  m_LocalPosition: {x: 0, y: 30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 0}
   m_RootOrder: 0
-  m_LocalEulerAnglesHint: {x: 30, y: 0, z: 0}
+  m_LocalEulerAnglesHint: {x: 90, y: 0, z: 0}
 --- !u!1 &1429748437
 GameObject:
   m_ObjectHideFlags: 0
@@ -703,7 +707,7 @@ GameObject:
   - component: {fileID: 1429748439}
   - component: {fileID: 1429748438}
   m_Layer: 0
-  m_Name: Marker (2)
+  m_Name: Marker3
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -741,7 +745,7 @@ MeshRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 2100000, guid: a28f58d7c0ec8574b88eeef9b92bd361, type: 2}
+  - {fileID: 2100000, guid: a1c473cf84236314290e0bce607a8c51, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -778,7 +782,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1429748437}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -10, y: 0.1, z: -10}
+  m_LocalPosition: {x: -15, y: 0.1, z: -15}
   m_LocalScale: {x: 0.1, y: 1, z: 0.1}
   m_Children: []
   m_Father: {fileID: 0}

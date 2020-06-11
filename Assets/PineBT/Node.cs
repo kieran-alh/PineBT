@@ -113,9 +113,8 @@
         }
 
         /// <summary>Resets the <c>Node</c> to a fresh state.</summary>
-        protected void Reset()
+        public virtual void Reset()
         {
-            previousState = State.FRESH;
             state = State.FRESH;
         }
 
