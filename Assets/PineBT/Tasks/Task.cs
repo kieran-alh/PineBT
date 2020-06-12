@@ -7,6 +7,7 @@
     public abstract class Task : Node
     {
         /// <summary>Creates a new task with a custom name.</summary>
+        /// <param name="name">Name of the Task.</param>
         public Task(string name) : base(name)
         {}
 

@@ -42,6 +42,7 @@ namespace PineBT
         /// Constructs a Blackboard with a default name.
         /// Random variation defaults to 0.
         /// </summary>
+        /// <param name="timerRandomVariation">Time variation for Blackboard listeners timer. Defaults to 0.</param>
         public Blackboard(float timerRandomVariation = 0f) : this("Blackboard", timerRandomVariation)
         {}
 
@@ -49,6 +50,8 @@ namespace PineBT
         /// Constructs a Blackboard with a custom name.
         /// Random variation defaults to 0.
         /// </summary>
+        /// <param name="name">Name of the Blackboard.</param>
+        /// <param name="timerRandomVariation">Time variation for Blackboard listeners timer. Defaults to 0.</param>
         public Blackboard(string name, float timerRandomVariation = 0f)
         {
             this.name = name;
@@ -59,6 +62,8 @@ namespace PineBT
         /// Constructs a Blackboard with a parent.
         /// Random variation defaults to 0.
         /// </summary>
+        /// <param name="parent">Blackboard's parent.</param>
+        /// <param name="timerRandomVariation">Time variation for Blackboard listeners timer. Defaults to 0.</param>
         public Blackboard(Blackboard parent, float timerRandomVariation = 0f) : this("Blackboard", parent, timerRandomVariation)
         {}
 
@@ -66,6 +71,9 @@ namespace PineBT
         /// Constructs a Blackboard with a custom name and parent.
         /// Random variation defaults to 0.
         /// </summary>
+        /// <param name="name">Name of the Blackboard.</param>
+        /// <param name="parent">Blackboard's parent.</param>
+        /// <param name="timerRandomVariation">Time variation for Blackboard listeners timer. Defaults to 0.</param>
         public Blackboard(string name, Blackboard parent, float timerRandomVariation = 0f)
         {
             this.name = name;

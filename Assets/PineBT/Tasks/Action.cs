@@ -19,6 +19,7 @@
         /// Creates a new Action with a default name, and a provided function with no return value.
         /// The function provided will always result in a <see cref="State.SUCCESS"/>.
         /// </summary>
+        /// <param name="task">Task Action with no return value.</param>
         public Action(System.Action task) : this("Action", task)
         {}
 
@@ -26,6 +27,7 @@
         /// Creates a new Action with a default name, 
         /// and a provided function that returns a <see cref="State"/>.
         /// </summary>
+        /// <param name="task">Task Function with State return value.</param>
         public Action(System.Func<State> task) : this("Action", task)
         {}
 
@@ -33,6 +35,8 @@
         /// Creates a new Action with a custom name, and a provided function with no return value.
         /// The function provided will always result in a <see cref="State.SUCCESS"/>.
         /// </summary>
+        /// <param name="name">Name of the Action.</param>
+        /// <param name="task">Task Action with no return value.</param>
         public Action(string name, System.Action task) : base(name)
         {
             this.action = task;
@@ -42,6 +46,8 @@
         /// Creates a new Action with a custom name, 
         /// and a provided function that returns a <see cref="State"/>.
         /// </summary>
+        /// <param name="name">Name of the Action.</param>
+        /// <param name="task">Task Function with State return value.</param>
         public Action(string name, System.Func<State> task) : base(name)
         {
             this.function = task;

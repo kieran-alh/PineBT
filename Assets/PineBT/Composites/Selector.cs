@@ -14,18 +14,22 @@
         /// <summary>
         /// Creates a Selector with a custom name and instantiates the children node list.
         /// </summary>
+        /// <param name="name">Name of the Selector.</param>
         public Selector(string name) : base(name)
         {}
 
         /// <summary>
         /// Creates a Selector with a default name and a provided set of children.
         /// </summary>
+        /// <param name="nodes">Set of children nodes.</param>
         public Selector(params Node[] nodes) : base("Selector", nodes)
         {}
 
         /// <summary>
         /// Creates a Selector with a custom name and a provided set of children.
         /// </summary>
+        /// <param name="name">Name of the Selector.</param>
+        /// <param name="nodes">Set of children nodes.</param>
         public Selector(string name, params Node[] nodes) : base(name, nodes)
         {}
         
@@ -52,6 +56,7 @@
         /// <summary>
         /// Called when at least one child succeeds.
         /// </summary>
+        /// <param name="child">Successful child.</param>
         protected override void ChildSuccess(Node child)
         {
             runningChild = null;
@@ -63,6 +68,7 @@
         /// If there are more children to execute, then next child is executed.
         /// If all children have been executed, the Selector fails.
         /// </summary>
+        /// <param name="child">Failed child.</param>
         protected override void ChildFailure(Node child)
         {
             currentChildIndex++;
@@ -81,6 +87,7 @@
         /// <summary>
         /// Called when a child is still running and sets the child as the running child.
         /// </summary>
+        /// <param name="child">Running child.</param>
         protected override void ChildRunning(Node child)
         {
             // Set the running child, and notify up
