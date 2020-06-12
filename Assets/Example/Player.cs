@@ -41,29 +41,44 @@ public class Player : MonoBehaviour
         tree = new BehaviourTree("ExampleTree");
         blackboard = new Blackboard();
 
+        // SERVICE
         Service exampleService = new Service("ExampleBB", 2f, 0.25f, ExampleBlackboardService, false, true);
 
+        // MOVES
+        Action move1 = new Action("Move1", () => Move(point1.position));
+        Action move2 = new Action("Move2", () => Move(point2.position));
+        Action move3 = new Action("Move3", () => Move(point3.position));
+        Action move4 = new Action("Move4", () => Move(point4.position));
+        
+        // PARALLELS
         Parallel parallel1 = new Parallel("P1", Parallel.Policy.SEQUENCE, Parallel.Executor.ENTIRE,
-            new Action("Move1", () => Move(point1.position)),
+            move1,
             new Action("Color1", () => ColorAction(color1))
         );
         Parallel parallel2 = new Parallel("P2", Parallel.Policy.SEQUENCE_CONTINUE, Parallel.Executor.ENTIRE,
-            new Action("Move1", () => Move(point2.position)),
+            move2,
             new Action("Color1", () => ColorAction(color2))
         );
         Parallel parallel3 = new Parallel("P3",
-            new Action("Move1", () => Move(point3.position)),
+            move3,
             new Action("Color1", () => ColorAction(color3))
         );
         Parallel parallel4 = new Parallel("P4", Parallel.Policy.SELECTOR_CONTINUE, Parallel.Executor.ENTIRE,
-            new Action(() => Move(point4.position)),
+            move4,
             new Action(() => ColorAction(color4))
         );
 
+        // COOLDOWN
         Cooldown limiter = new Cooldown("Limiter", 5.0f, 0.1f, true, new Action(LimitExample));
-        Sequence moveParent = new Sequence("MoveParent", parallel1, parallel2, parallel3, parallel4);
+        // PARALLEL MOVE
+        Sequence parallelMove = new Sequence("ParallelMove", parallel1, parallel2, parallel3, parallel4);
+        
+        // SELECTOR MOVE
+        Selector selectorMove = new Selector("SelectMove",
+            new Failer(true, move1), move2, move3, move4
+        );
 
-        Sequence sequence = new Sequence("Sequence", moveParent, limiter);
+        Sequence sequence = new Sequence("Sequence", parallelMove, limiter);
 
         tree.SetRoot(exampleService);
             exampleService.AddChild(sequence);
