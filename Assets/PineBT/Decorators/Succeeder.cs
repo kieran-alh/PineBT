@@ -14,7 +14,7 @@
         private bool successOnRunning = false;
 
         /// <summary>
-        /// Succeeder, successOnRunning defautls to false.
+        /// Succeeder, successOnRunning defaults to false.
         /// </summary>
         /// <param name="successOnRunning">
         /// Return Success when child returns Running and cancel child. Defaults to false.</param>
@@ -23,7 +23,7 @@
         
         /// <summary>
         /// Succeeder with provided child.
-        /// successOnRunning defautls to false.
+        /// successOnRunning defaults to false.
         /// </summary>
         /// <param name="child">Succeeder's child.</param>
         public Succeeder(Node child) : this("Succeeder", false, child)

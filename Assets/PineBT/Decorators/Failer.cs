@@ -1,8 +1,8 @@
 ﻿namespace PineBT
 {
     /// <summary>
-    /// <para>Failer will alwasys Fail when the child node returns <see cref="State.SUCCESS"/>.</para>
-    /// <para>By default the failOnRunning flag is set to flase and the Failer
+    /// <para>Failer will always Fail when the child node returns <see cref="State.SUCCESS"/>.</para>
+    /// <para>By default the failOnRunning flag is set to false and the Failer
     /// will return a <see cref="State.RUNNING"/> when the child returns a Running State.
     /// When failOnRunning is true, the Failer will return a Running State and the child will be cancelled.</para>
     /// </summary>
@@ -14,7 +14,7 @@
         private bool failOnRunning = false;
 
         /// <summary>
-        /// Failer, failOnRunning defautls to false.
+        /// Failer, failOnRunning defaults to false.
         /// </summary>
         /// <param name="failOnRunning">
         /// Return Fail when child returns Running and cancel child. Defaults to false.</param>
@@ -25,7 +25,7 @@
         
         /// <summary>
         /// Failer with provided child.
-        /// failOnRunning defautls to false.
+        /// failOnRunning defaults to false.
         /// </summary>
         /// <param name="child">Failer's child.</param>
         public Failer(Node child) : this("Failer", false, child)
@@ -103,9 +103,11 @@
             {
                 child.Cancel();
                 Fail();
-            } 
+            }
             else
+            {
                 Running();
+            }
         }
     }
 }
