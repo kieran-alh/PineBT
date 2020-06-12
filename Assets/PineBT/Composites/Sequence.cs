@@ -14,18 +14,22 @@
         /// <summary>
         /// Creates a Sequence with a custom name and instantiates the children node list.
         /// </summary>
+        /// <param name="name">Name of the Sequence.</param>
         public Sequence(string name) : base(name)
         {}
 
         /// <summary>
         /// Creates a Sequence with a default name and a provided set of children.
         /// </summary>
+        /// <param name="nodes">Set of children nodes.</param>
         public Sequence(params Node[] nodes) : base("Sequence", nodes)
         {}
 
         /// <summary>
         /// Creates a Sequence with a custom name and a provided set of children.
         /// </summary>
+        /// <param name="name">Name of the Sequence.</param>
+        /// <param name="nodes">Set of children nodes.</param>
         public Sequence(string name, params Node[] nodes) : base(name, nodes)
         {}
         
@@ -54,6 +58,7 @@
         /// If there are more children to execute, then next child is executed.
         /// If all children have been executed, the Sequence succeeds.
         /// </summary>
+        /// <param name="child">Successful child.</param>
         protected override void ChildSuccess(Node child)
         {
             runningChild = null;
@@ -71,6 +76,7 @@
         /// <summary>
         /// Called when at least one child fails.
         /// </summary>
+        /// <param name="child">Failed child.</param>
         protected override void ChildFailure(Node child)
         {
             runningChild = null;
@@ -80,6 +86,7 @@
         /// <summary>
         /// Called when a child is still running and sets the child as the running child.
         /// </summary>
+        /// <param name="child">Running child.</param>
         protected override void ChildRunning(Node child)
         {
             // Set the running child, and notify up

@@ -132,17 +132,20 @@
         /// <summary>
         /// Called by a child to notify the <c>Node</c> that it's execution has succeeded.
         /// </summary>
+        /// <param name="child">Successful child.</param>
         protected abstract void ChildSuccess(Node child);
 
         /// <summary>
         /// Called by a child to notify the <c>Node</c> that it's execution has failed.
         /// </summary>
+        /// <param name="child">Failed child.</param>
         protected abstract void ChildFailure(Node child);
 
         /// <summary>
         /// Called by a child <c>Node</c> when it's execution is still running, 
         /// and needs to be ran again in the next update.
         /// </summary>
+        /// <param name="child">Running child.</param>
         protected abstract void ChildRunning(Node child);
     }
 }

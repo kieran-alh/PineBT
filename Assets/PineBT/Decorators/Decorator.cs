@@ -11,10 +11,13 @@ namespace PineBT
         protected Node child;
 
         /// <summary>Creates a Decorator with a custom name.</summary>
+        /// <param name="name">Name of Decorator Node.</param>
         public Decorator(string name) : base(name)
         {}
 
         /// <summary>Creates a Decorator with a custom name, and provided child.</summary>
+        /// <param name="name">Name of Decorator Node.</param>
+        /// <param name="child">Decorator's child.</param>
         public Decorator(string name, Node child) : base(name)
         {
             this.child = child;
@@ -24,6 +27,7 @@ namespace PineBT
         /// <summary>
         /// Adds a child to the Decorator and sets the child's parent to the Decorator.
         /// </summary>
+        /// <param name="child">Decorator's child to be added.</param>
         public void AddChild(Node child)
         {
             if (this.child == null)
@@ -60,6 +64,7 @@ namespace PineBT
         /// <summary>
         /// Called by the child when the child succeeds.
         /// </summary>
+        /// <param name="child">Successful child.</param>
         protected override void ChildSuccess(Node child)
         {
             Success();
@@ -68,6 +73,7 @@ namespace PineBT
         /// <summary>
         /// Called by the child when the child fails.
         /// </summary>
+        /// <param name="child">Failed child.</param>
         protected override void ChildFailure(Node child)
         {
             Fail();
@@ -76,6 +82,7 @@ namespace PineBT
         /// <summary>
         /// Called by the child when the child is still running.
         /// </summary>
+        /// <param name="child">Running child.</param>
         protected override void ChildRunning(Node child)
         {
             Running();

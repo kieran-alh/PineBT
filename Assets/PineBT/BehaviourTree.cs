@@ -18,26 +18,33 @@ namespace PineBT
         
         private PineTreeManager treeManager = PineTreeUnityContext.Instance().TreeManager;
 
-        /// <summary>Constructs a <c>Tree</c> with a basic name, and no root.</summary>
+        /// <summary>Constructs a Tree with a basic name, and no root.</summary>
         public BehaviourTree() : this("Tree", null)
         {}
 
-        /// <summary>Constructs a <c>Tree</c> with a custom name, and no root.</summary>
+        /// <summary>Constructs a Tree with a custom name, and no root.</summary>
+        /// <param name="name">Name of the BehaviourTree.</param>
         public BehaviourTree(string name) : this(name, null)
         {}
 
-        /// <summary>Constructs a <c>Tree</c> with a basic name, and a provided root.</summary>
+        /// <summary>Constructs a Tree with a basic name, and a provided root.</summary>
+        /// <param name="root">Tree's Root Node.</param>
         public BehaviourTree(Node root) : this("Tree", root)
         {}
 
         /// <summary>
-        /// Constructs a <c>Tree</c> with a custom name, and a provided root.
+        /// Constructs a Tree with a custom name, and a provided root.
         /// Creates a Blackboard.
         /// </summary>
+        /// <param name="name">Name of the BehaviourTree.</param>
+        /// <param name="root">Tree's Root Node.</param>
         public BehaviourTree(string name, Node root) : this(name, new Blackboard(), root)
         {}
 
-        /// <summary>Constructs a <c>Tree</c> with a provided name, blackboard, and root node.</summary>
+        /// <summary>Constructs a Tree with a provided name, blackboard, and root node.</summary>
+        /// <param name="name">Name of the BehaviourTree.</param>
+        /// <param name="blackboard">Provided Blackboard for the BehaviourTree.</param>
+        /// <param name="root">Tree's Root Node.</param>
         public BehaviourTree(string name, Blackboard blackboard, Node root) : base(name)
         {
             this.root = root;
@@ -58,6 +65,7 @@ namespace PineBT
         }
 
         /// <summary>Set the Tree's root node.</summary>
+        /// <param name="root">Root Node for the BehaviourTree.</param>
         public void SetRoot(Node root)
         {
             if (this.root == null)
@@ -139,7 +147,7 @@ namespace PineBT
         /// Called by a child node indicating the nodes in the tree have executed their task's 
         /// and returned a success.
         /// </summary>
-        /// <param name="child">The child that Succeeded.</param>
+        /// <param name="child">Successful child.</param>
         protected override void ChildSuccess(Node child)
         {
             Success();
@@ -149,7 +157,7 @@ namespace PineBT
         /// Called by a child node indicating the nodes in the tree have executed their task's 
         /// and returned a failure.
         /// </summary>
-        /// <param name="child">The child that Failed.</param>
+        /// <param name="child">Failed child.</param>
         protected override void ChildFailure(Node child)
         {
             Fail();
@@ -158,7 +166,7 @@ namespace PineBT
         /// <summary>
         /// A node in the tree is still running and needs to run again next Update cycle.
         /// </summary>
-        /// <param name="child">The child that is Running.</param>
+        /// <param name="child">Running child.</param>
         protected override void ChildRunning(Node child)
         {
             Running();

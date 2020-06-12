@@ -19,6 +19,7 @@ namespace PineBT
         /// <summary>
         /// Creates a new composite with a custom name, and a initializes a list of children.
         /// </summary>
+        /// <param name="name">Name of the Composite.</param>
         public Composite(string name) : base(name)
         {
             children = new List<Node>();
@@ -29,6 +30,8 @@ namespace PineBT
         /// <summary>
         /// Creates a new composite with a custom name, and a provided set of children.
         /// </summary>
+        /// <param name="name">Name of the Sequence.</param>
+        /// <param name="nodes">Set of children nodes.</param>
         public Composite(string name, params Node[] nodes) : base(name)
         {
             children = new List<Node>(nodes);
@@ -39,6 +42,7 @@ namespace PineBT
         /// <summary>
         /// Adds a child to the Composite and sets the child's parent to the Composite.
         /// </summary>
+        /// <param name="child">Child to be added.</param>
         public void AddChild(Node child)
         {
             children.Add(child);
@@ -72,12 +76,21 @@ namespace PineBT
             }
         }
 
-        public override void Reset()
+        /// <summary>
+        /// Resets the Composite, option to reset the Composite's children.
+        /// </summary>
+        /// <param name="resetChildren">Reset Composite's children.</param>
+        public void Reset(bool resetChildren = true)
         {
             base.Reset();
-            ResetChildren();
+            if (resetChildren)
+                ResetChildren();
         }
 
+        /// <summary>
+        /// Cancels all children that are in a Running State.
+        /// </summary>
+        /// <param name="index">Starting index of children to start cancelling.</param>
         protected void CancelRunningChildren(int index)
         {
             for (int i = index; i < children.Count; i++)
@@ -87,6 +100,9 @@ namespace PineBT
             }
         }
 
+        /// <summary>
+        /// Resets all children.
+        /// </summary>
         protected void ResetChildren()
         {
             for (int i = 0; i < children.Count; i++)
