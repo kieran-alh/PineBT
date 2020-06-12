@@ -53,7 +53,9 @@ public class Player : MonoBehaviour
         // PARALLELS
         Parallel parallel1 = new Parallel("P1", Parallel.Policy.SEQUENCE, Parallel.Executor.ENTIRE,
             move1,
-            new Action("Color1", () => ColorAction(color1))
+            new Succeeder(
+                new Failer(new Action("Color1", () => ColorAction(color1)))
+            )
         );
         Parallel parallel2 = new Parallel("P2", Parallel.Policy.SEQUENCE_CONTINUE, Parallel.Executor.ENTIRE,
             move2,
