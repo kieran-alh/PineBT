@@ -292,11 +292,21 @@
             switch (policy)
             {
                 case Policy.SEQUENCE:
-                    // If there are no running children and the last child has succeeded
-                    // set status to success
-                    lastChildState = !hasRunningChildren && children.Last().State == State.SUCCESS
-                        ? State.SUCCESS
-                        : State.NONE;
+                    switch (executor)
+                    {
+                        case Executor.ENTIRE:
+                            lastChildState = !hasRunningChildren && currentChildIndex == children.Count - 1
+                                ? State.SUCCESS
+                                : State.NONE;
+                            break;
+                        case Executor.REMAINING:
+                            // If there are no running children and the last child has succeeded
+                            // set status to success
+                            lastChildState = !hasRunningChildren && children.Last().State == State.SUCCESS
+                                ? State.SUCCESS
+                                : State.NONE;
+                            break;
+                    }
                     break;
                 case Policy.SEQUENCE_CONTINUE:
                     // If there are running children, State is Running
